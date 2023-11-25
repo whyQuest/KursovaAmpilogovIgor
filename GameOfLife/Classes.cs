@@ -10,18 +10,18 @@ using System.Collections.Concurrent;
 
 namespace Ecosystem
 {
-    public class SemaphoreQueue
+    public class Queue
     {
         private SemaphoreSlim semaphore;
         private ConcurrentQueue<TaskCompletionSource<bool>> queue =
             new ConcurrentQueue<TaskCompletionSource<bool>>();
-        public SemaphoreQueue(int initialCount)
+        public Queue(int initCount)
         {
-            semaphore = new SemaphoreSlim(initialCount);
+            semaphore = new SemaphoreSlim(initCount);
         }
-        public SemaphoreQueue(int initialCount, int maxCount)
+        public Queue(int initCount, int maxCount)
         {
-            semaphore = new SemaphoreSlim(initialCount, maxCount);
+            semaphore = new SemaphoreSlim(initCount, maxCount);
         }
         public void Wait()
         {
@@ -50,10 +50,10 @@ namespace Ecosystem
         public int rabbitLive { get; set; }
         public int wolfLive { get; set; }
 
-        public SimulateUPEventArgs(int conigliRimasti, int lupiRimasti)
+        public SimulateUPEventArgs(int rabbitLive, int WolfLive)
         {
-            rabbitLive = conigliRimasti;
-            wolfLive = lupiRimasti;
+            this.rabbitLive = rabbitLive;
+            wolfLive = WolfLive;
         }
     }
 
@@ -63,120 +63,120 @@ namespace Ecosystem
         public int Y { get; set; }
         public ElementG Elements { get; set; }
 
-        public CellsUPEventArgs(int X, int Y, ElementG Elemento)
+        public CellsUPEventArgs(int X, int Y, ElementG Element)
         {
-            this.X = X; this.Y = Y; this.Elements = Elemento;
+            this.X = X; this.Y = Y; this.Elements = Element;
         }
     }
 
     public class Nets
     {
-        private int intervalloCarote;
-        public Random rnd { get; set; }
-        public CCella[,] cells { get; set; }
-        public int Larghezza { get; set; }
-        public int Altezza { get; set; }
-        private SemaphoreQueue simulazioneFinitaMutex = new SemaphoreQueue(1, 1);
+        private int IntervallCarrot;
+        public Random rand { get; set; }
+        public CellsOK[,] cells { get; set; }
+        public int Lenght { get; set; }
+        public int Height { get; set; }
+        private Queue modelFinish = new Queue(1, 1);
         public bool simulateFinish { get; set; }
-        private SemaphoreQueue numConigliMutex = new SemaphoreQueue(1, 1);
-        private SemaphoreQueue numLupiMutex = new SemaphoreQueue(1, 1);
-        public int NumConigli { get; set; }
-        public int NumLupi { get; set; }
-        public Nets(int larghezza, int altezza)
+        private Queue numRabbitM = new Queue(1, 1);
+        private Queue numWolfM = new Queue(1, 1);
+        public int NumRabbit { get; set; }
+        public int NumWolf { get; set; }
+        public Nets(int lenght, int height)
         {
-            cells = new CCella[larghezza, altezza];
-            Larghezza = larghezza;
-            Altezza = altezza;
+            cells = new CellsOK[lenght, height];
+            Lenght = lenght;
+            Height = height;
             
-            for(int i=0; i<larghezza; i++)
+            for(int i=0; i<lenght; i++)
             {
-                for (int j = 0; j < altezza; j++)
-                    cells[i, j] = new CCella(i, j);
+                for (int j = 0; j < height; j++)
+                    cells[i, j] = new CellsOK(i, j);
             }
 
-            SimulazioneInPausa = true;
+            SimulatePause = true;
         }
 
-        public void Init(int numConigli, int numLupi, int numCarote, int intervalloCarote)
+        public void Init(int numbRabbit, int numbWolf, int numCarrot, int intervallCarrot)
         {
-            NumConigli = numConigli;
-            NumLupi = numLupi;
+            NumRabbit = numbRabbit;
+            NumWolf = numbWolf;
             simulateFinish = false;
-            this.intervalloCarote = intervalloCarote*1000;
-            int[,] Combinazioni = new int[Larghezza * Altezza, 2];
-            int[] indiciCombinazioni = new int[Larghezza * Altezza];
-            for (int x = 0; x < Larghezza; x++)
+            this.IntervallCarrot = intervallCarrot*1000;
+            int[,] Combi = new int[Lenght * Height, 2];
+            int[] CombiINDEX = new int[Lenght * Height];
+            for (int x = 0; x < Lenght; x++)
             {
-                for (int y = 0; y < Altezza; y++)
+                for (int y = 0; y < Height; y++)
                 {
-                    Combinazioni[y + x * Altezza, 0] = x;
-                    Combinazioni[y + x * Altezza, 1] = y;
-                    indiciCombinazioni[y + x * Altezza] = y + x * Altezza;
+                    Combi[y + x * Height, 0] = x;
+                    Combi[y + x * Height, 1] = y;
+                    CombiINDEX[y + x * Height] = y + x * Height;
                 }
             }
-            rnd = new Random();
-            indiciCombinazioni = indiciCombinazioni.OrderBy(x => rnd.Next()).ToArray();
+            rand = new Random();
+            CombiINDEX = CombiINDEX.OrderBy(x => rand.Next()).ToArray();
             int i = 0;
-            for (int j = 0; j < numConigli; j++)
+            for (int j = 0; j < numbRabbit; j++)
             {
-                cells[Combinazioni[indiciCombinazioni[i], 0], Combinazioni[indiciCombinazioni[i], 1]].Element = new Rabbit(Combinazioni[indiciCombinazioni[i], 0], Combinazioni[indiciCombinazioni[i], 1], this);
+                cells[Combi[CombiINDEX[i], 0], Combi[CombiINDEX[i], 1]].Element = new Rabbit(Combi[CombiINDEX[i], 0], Combi[CombiINDEX[i], 1], this);
                 i++;
             }
-            for (int j = 0; j < numLupi; j++)
+            for (int j = 0; j < numbWolf; j++)
             {
-                cells[Combinazioni[indiciCombinazioni[i], 0], Combinazioni[indiciCombinazioni[i], 1]].Element = new Wolf(Combinazioni[indiciCombinazioni[i], 0], Combinazioni[indiciCombinazioni[i], 1], this);
+                cells[Combi[CombiINDEX[i], 0], Combi[CombiINDEX[i], 1]].Element = new Wolf(Combi[CombiINDEX[i], 0], Combi[CombiINDEX[i], 1], this);
                 i++;
             }
-            for (int j = 0; j < numCarote; j++)
+            for (int j = 0; j < numCarrot; j++)
             {
-                cells[Combinazioni[indiciCombinazioni[i], 0], Combinazioni[indiciCombinazioni[i], 1]].Element = new Carrot(Combinazioni[indiciCombinazioni[i], 0], Combinazioni[indiciCombinazioni[i], 1], this);
+                cells[Combi[CombiINDEX[i], 0], Combi[CombiINDEX[i], 1]].Element = new Carrot(Combi[CombiINDEX[i], 0], Combi[CombiINDEX[i], 1], this);
                 i++;
             }
 
-            foreach(CCella c in cells)
+            foreach(CellsOK c in cells)
             {
                 (c.Element as AnimalSett)?.DiminuisciVita();
                 (c.Element as AnimalSett)?.Muovi();
             }
 
-            InserisciCarote();
+            PushCarrot();
         }
 
-        public async Task DiminuisciNumConigli()
+        public async Task CountRabbitMinus()
         {
-            await numConigliMutex.WaitAsync();
+            await numRabbitM.WaitAsync();
 
-            NumConigli--;
+            NumRabbit--;
 
-            if(NumConigli == 0)
+            if(NumRabbit == 0)
             {
-                await simulazioneFinitaMutex.WaitAsync();
+                await modelFinish.WaitAsync();
                 simulateFinish = true;
-                OnFineSimulazione(new SimulateUPEventArgs(NumConigli, NumLupi));
-                simulazioneFinitaMutex.Release();
+                FinSimulate(new SimulateUPEventArgs(NumRabbit, NumWolf));
+                modelFinish.Release();
             }
 
-            numConigliMutex.Release();
+            numRabbitM.Release();
         }
 
-        public async Task DiminuisciNumLupi()
+        public async Task CountWolfMinus()
         {
-            await numLupiMutex.WaitAsync();
+            await numWolfM.WaitAsync();
 
-            NumLupi--;
+            NumWolf--;
 
-            if (NumLupi == 0)
+            if (NumWolf == 0)
             {
-                await simulazioneFinitaMutex.WaitAsync();
+                await modelFinish.WaitAsync();
                 simulateFinish = true;
-                OnFineSimulazione(new SimulateUPEventArgs(NumConigli, NumLupi));
-                simulazioneFinitaMutex.Release();
+                FinSimulate(new SimulateUPEventArgs(NumRabbit, NumWolf));
+                modelFinish.Release();
             }
 
-            numLupiMutex.Release();
+            numWolfM.Release();
         }
 
-        public async void InserisciCarote()
+        public async void PushCarrot()
         {
             while (true)
             {
@@ -185,26 +185,26 @@ namespace Ecosystem
                     return;
                 }
 
-                if (!SimulazioneInPausa)
+                if (!SimulatePause)
                 {
                     int x, y;
 
-                    bool cellaVuotaTrovata = false;
-                    while (!cellaVuotaTrovata)
+                    bool zeroCells = false;
+                    while (!zeroCells)
                     {
-                        x = rnd.Next(0, cells.GetLength(0));
-                        y = rnd.Next(0, cells.GetLength(1));
+                        x = rand.Next(0, cells.GetLength(0));
+                        y = rand.Next(0, cells.GetLength(1));
 
-                        await cells[x, y].OttieniAccessoAsync();
+                        await cells[x, y].giveAsync();
                         if (cells[x, y].Element == null)
                         {
-                            cellaVuotaTrovata = true;
+                            zeroCells = true;
                             cells[x, y].Element = new Carrot(x, y, this);
-                            cells[x, y].AggiornaCella();
+                            cells[x, y].cellsUP();
                         }
                         try
                         {
-                            cells[x, y].RilasciaAccesso();
+                            cells[x, y].ReleaseAcc();
                         }
                         catch(Exception e)
                         {
@@ -213,28 +213,28 @@ namespace Ecosystem
                     }
                 }
 
-                await Task.Delay(intervalloCarote);
+                await Task.Delay(IntervallCarrot);
             }
         }
 
-        public bool SimulazioneInPausa { get; set; }
+        public bool SimulatePause { get; set; }
         public void Play()
         {
-            SimulazioneInPausa = false;
+            SimulatePause = false;
         }
 
         public void Pause()
         {
-            SimulazioneInPausa = true;
+            SimulatePause = true;
         }
 
         public void Stop()
         {
             simulateFinish = true;
-            OnFineSimulazione(new SimulateUPEventArgs(NumConigli, NumLupi));
+            FinSimulate(new SimulateUPEventArgs(NumRabbit, NumWolf));
         }
 
-        private void OnFineSimulazione(SimulateUPEventArgs e)
+        private void FinSimulate(SimulateUPEventArgs e)
         {
             Simulate?.Invoke(this, e);
         }
@@ -243,98 +243,98 @@ namespace Ecosystem
 
     }
 
-    public class CCella
+    public class CellsOK
     { 
-        private SemaphoreQueue semaforo = new SemaphoreQueue(1, 1);
+        private Queue check = new Queue(1, 1);
         public ElementG Element { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
 
-        public CCella(int X, int Y)
+        public CellsOK(int X, int Y)
         {
             this.X = X; this.Y = Y;
         }
 
         public event EventHandler<CellsUPEventArgs> CellsUP;
 
-        protected void OnCellaAggiornata(CellsUPEventArgs e)
+        protected void cellsUP2(CellsUPEventArgs e)
         {
             CellsUP?.Invoke(this, e);
         }
-        public void AggiornaCella()
+        public void cellsUP()
         {
             CellsUPEventArgs e = new CellsUPEventArgs(X, Y, Element);
-            OnCellaAggiornata(e);
+            cellsUP2(e);
         }
 
-        public async Task OttieniAccessoAsync()
+        public async Task giveAsync()
         {
-            await semaforo.WaitAsync();
+            await check.WaitAsync();
         }
 
-        public void RilasciaAccesso()
+        public void ReleaseAcc()
         {
-            semaforo.Release();
+            check.Release();
         }
 
 
         public void Elimina()
         {
             Element = null;
-            AggiornaCella();
+            cellsUP();
         }
     }
 
     public abstract class ElementG
     {
-        protected Nets griglia;
-        public ElementG(int X, int Y, Nets griglia)
+        protected Nets net;
+        public ElementG(int X, int Y, Nets Net)
         {
             this.X = X;
             this.Y = Y;
-            this.griglia = griglia;
+            this.net = Net;
         }
         public int X { get; set; }
         public int Y { get; set; }
     }
 
-    public class CInformazioni
+    public class Information
     {
-        public bool AccessoOttenuto { get; set; }
-        public bool NuovaPosizioneTrovata { get; set; }
-        public bool CiboTrovato { get; set; }
+        public bool Accsses { get; set; }
+        public bool newPlace { get; set; }
+        public bool eatSearch { get; set; }
         public int newX { get; set; }
         public int newY { get; set; }
-        public bool Eliminato { get; set; }
+        public bool trueok { get; set; }
 
-        public CInformazioni(bool accessoOttenuto, bool nuovaPosizioneTrovata, bool ciboTrovato,
+        public Information(bool accessoOttenuto, bool nuovaPosizioneTrovata, bool ciboTrovato,
             int x, int y, bool eliminato)
         {
-            AccessoOttenuto = accessoOttenuto;
-            NuovaPosizioneTrovata = nuovaPosizioneTrovata;
-            CiboTrovato = ciboTrovato;
+            Accsses = accessoOttenuto;
+            newPlace = nuovaPosizioneTrovata;
+            eatSearch = ciboTrovato;
             newX = x;
             newY = y;
-            Eliminato = eliminato;
+            trueok = eliminato;
         }
     }
     public abstract class AnimalSett : ElementG
     {
-        public SemaphoreQueue vitaMutex = new SemaphoreQueue(1, 1);
+        public Queue vitaMutex = new Queue(1, 1);
         public int Vita { get; set; }
         public AnimalSett(int X, int Y, Nets griglia) : base(X, Y, griglia) { Vita = 10; }
 
         public void AnalizzaCella(int xCella, int yCella, ref int newX, ref int newY, ref bool NuovaPosizioneTrovata, ref bool CiboTrovato)
         {
             // controlla se nella cella che si sta analizzando c'è del cibo
-            bool ciboPresenteNellaCella = CiboPresenteNellaCella(griglia.cells[xCella, yCella].Element);
+            bool ciboPresenteNellaCella = CiboPresenteNellaCella(net.cells[xCella, yCella].Element);
 
             // se è già stata trovata una cella vicina con del cibo e la cella in analisi contiene del cibo
             // ha una possibilità del 50% di rendere la cella in analisi la nuova cella verso cui spostarsi
-            if (CiboTrovato && ciboPresenteNellaCella && griglia.rnd.Next(0, 100) < 50)
+            if (CiboTrovato && ciboPresenteNellaCella && net.rand.Next(0, 100) < 50)
             {
                 // non occorre più avere l'accesso della cella precedente
-                griglia.cells[newX, newY].RilasciaAccesso();
+                net.cells[newX, newY].ReleaseAcc();
 
                 newX = xCella;
                 newY = yCella;
@@ -346,7 +346,7 @@ namespace Ecosystem
             {
                 // se era già stata selezionata un'altra cella come prossima cella, rilascia l'accesso
                 if (NuovaPosizioneTrovata)
-                    griglia.cells[newX, newY].RilasciaAccesso();
+                    net.cells[newX, newY].ReleaseAcc();
 
                 newX = xCella;
                 newY = yCella;
@@ -357,11 +357,11 @@ namespace Ecosystem
             // se non è stato trovato ancora cibo, la cella in analisi non ne contiene ed è vuota, 
             // segna la cella in analisi come prossima cella se non è stata trovata nessuna nuova posizione
             // oppure segnala con il 50% di probabilità se è già stata trovata un'altra cella verso cui muoversi
-            else if (!CiboTrovato && (!NuovaPosizioneTrovata || griglia.rnd.Next(0, 100) < 50) && griglia.cells[xCella, yCella].Element == null)
+            else if (!CiboTrovato && (!NuovaPosizioneTrovata || net.rand.Next(0, 100) < 50) && net.cells[xCella, yCella].Element == null)
             {
                 // se era già stata selezionata un'altra cella come prossima cella, rilascia l'accesso
                 if (NuovaPosizioneTrovata)
-                    griglia.cells[newX, newY].RilasciaAccesso();
+                    net.cells[newX, newY].ReleaseAcc();
 
                 newX = xCella;
                 newY = yCella;
@@ -370,51 +370,51 @@ namespace Ecosystem
 
             // nel caso la cella in analisi non sia stata segnata come prossima cella, il suo accesso si può rilasciare
             if (newX != xCella || newY != yCella)
-                griglia.cells[xCella, yCella].RilasciaAccesso();
+                net.cells[xCella, yCella].ReleaseAcc();
         }
         public async void Muovi()
         {
             while (true)
             {
-                if (griglia.simulateFinish)
+                if (net.simulateFinish)
                     return;
 
-                if (!griglia.SimulazioneInPausa)
+                if (!net.SimulatePause)
                 {
                     if (Y > 0)
-                        await griglia.cells[X, Y - 1].OttieniAccessoAsync();
+                        await net.cells[X, Y - 1].giveAsync();
                     if (X > 0)
-                        await griglia.cells[X - 1, Y].OttieniAccessoAsync();
+                        await net.cells[X - 1, Y].giveAsync();
 
 
-                    await griglia.cells[X, Y].OttieniAccessoAsync();
+                    await net.cells[X, Y].giveAsync();
 
-                    var animale = griglia.cells[X, Y].Element as AnimalSett;
+                    var animale = net.cells[X, Y].Element as AnimalSett;
                     if (animale != null)
                     {
                         if(animale.Vita == 0)
                         {
-                            griglia.cells[X, Y].Elimina();
+                            net.cells[X, Y].Elimina();
                             await DiminuisciContatore();
                         }
                     }
 
-                    if (griglia.cells[X, Y].Element != this)
+                    if (net.cells[X, Y].Element != this)
                     {
-                        griglia.cells[X, Y].RilasciaAccesso();
+                        net.cells[X, Y].ReleaseAcc();
                         
                         if (Y > 0)
-                            griglia.cells[X, Y - 1].RilasciaAccesso();
+                            net.cells[X, Y - 1].ReleaseAcc();
                         if (X > 0)
-                            griglia.cells[X - 1, Y].RilasciaAccesso();
+                            net.cells[X - 1, Y].ReleaseAcc();
 
                         return;
                     }
 
-                    if (X < griglia.cells.GetLength(0) - 1)
-                        await griglia.cells[X + 1, Y].OttieniAccessoAsync();
-                    if (Y < griglia.cells.GetLength(1) - 1)
-                        await griglia.cells[X, Y + 1].OttieniAccessoAsync();
+                    if (X < net.cells.GetLength(0) - 1)
+                        await net.cells[X + 1, Y].giveAsync();
+                    if (Y < net.cells.GetLength(1) - 1)
+                        await net.cells[X, Y + 1].giveAsync();
 
 
                     int newX = -1, newY = -1;
@@ -431,12 +431,12 @@ namespace Ecosystem
                         AnalizzaCella(X - 1, Y, ref newX, ref newY, ref NuovaPosizioneTrovata, ref CiboTrovato);
                     }
 
-                    if (X < griglia.cells.GetLength(0) - 1)
+                    if (X < net.cells.GetLength(0) - 1)
                     {
                         AnalizzaCella(X + 1, Y, ref newX, ref newY, ref NuovaPosizioneTrovata, ref CiboTrovato);
                     }
 
-                    if (Y < griglia.cells.GetLength(1) - 1)
+                    if (Y < net.cells.GetLength(1) - 1)
                     {
                         AnalizzaCella(X, Y + 1, ref newX, ref newY, ref NuovaPosizioneTrovata, ref CiboTrovato);
                     }
@@ -457,19 +457,19 @@ namespace Ecosystem
                             vitaMutex.Release();
                             await DiminuisciContatoreCibo();
                         }
-                        griglia.cells[X, Y].Element = this;
-                        griglia.cells[X, Y].AggiornaCella();
-                        griglia.cells[oldX, oldY].Elimina();
-                        griglia.cells[oldX, oldY].RilasciaAccesso();
-                        griglia.cells[X, Y].RilasciaAccesso();
+                        net.cells[X, Y].Element = this;
+                        net.cells[X, Y].cellsUP();
+                        net.cells[oldX, oldY].Elimina();
+                        net.cells[oldX, oldY].ReleaseAcc();
+                        net.cells[X, Y].ReleaseAcc();
                     }
                     else
                     {
-                        griglia.cells[X, Y].RilasciaAccesso();
+                        net.cells[X, Y].ReleaseAcc();
                     }
                 }   
 
-                await Task.Delay(griglia.rnd.Next(500, 1000));
+                await Task.Delay(net.rand.Next(500, 1000));
             }
         }
 
@@ -479,16 +479,16 @@ namespace Ecosystem
         {
             while (true)
             {
-                if (griglia.simulateFinish)
+                if (net.simulateFinish)
                     return;
 
-                if (!griglia.SimulazioneInPausa)
+                if (!net.SimulatePause)
                 {
                     await vitaMutex.WaitAsync();
                     Vita--;
                     vitaMutex.Release();
                     int a = X, b = Y;
-                    griglia.cells[X, Y].AggiornaCella();
+                    net.cells[X, Y].cellsUP();
 
                     if (Vita == 0)
                     {
@@ -515,7 +515,7 @@ namespace Ecosystem
 
         public override async Task DiminuisciContatore()
         {
-            await griglia.DiminuisciNumConigli();
+            await net.CountRabbitMinus();
         }
 
         public override async Task DiminuisciContatoreCibo()
@@ -536,12 +536,12 @@ namespace Ecosystem
 
         public override async Task DiminuisciContatore()
         {
-            await griglia.DiminuisciNumLupi();
+            await net.CountWolfMinus();
         }
 
         public override async Task DiminuisciContatoreCibo()
         {
-            await griglia.DiminuisciNumConigli();
+            await net.CountRabbitMinus();
         }
     }
 
