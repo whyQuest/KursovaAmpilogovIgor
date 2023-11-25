@@ -12,41 +12,41 @@ namespace Ecosystem
 {
     public partial class Ecosystem3 : Form
     {
-        public Ecosystem3(int ConigliRimasti, int LupiRimasti)
+        public Ecosystem3(int RabbitLive, int WolfLive)
         {
             InitializeComponent();
 
-            if(ConigliRimasti == 0 && LupiRimasti == 0)
+            if(RabbitLive == 0 && WolfLive == 0)
             {
-                lblRisultato.Text = "Pareggio!";
+                resultTOP.Text = "Нічия!";
             }
-            else if(ConigliRimasti == 0)
+            else if(RabbitLive == 0)
             {
-                lblRisultato.Text = "I lupi hanno vinto!";
+                resultTOP.Text = "Перемогли вовки!";
             }
-            else if (LupiRimasti == 0)
+            else if (WolfLive == 0)
             {
-                lblRisultato.Text = "I conigli hanno vinto!";
+                resultTOP.Text = "Перемогли кролики!";
             }
             else
             {
-                lblRisultato.Text = "Simulazione interrotta!";
+                resultTOP.Text = "Гра перервана! ";
             }
 
-            lblNumConigli.Text = ConigliRimasti + " conigli rimasti";
-            lblNumLupi.Text = LupiRimasti + " lupi rimasti";
+            RabbitTOP.Text = RabbitLive + " кролик(ів)";
+            WolfTOP.Text = WolfLive + " вовк(ів)";
         }
 
-        private void btnChiudi_Click(object sender, EventArgs e)
+        private void Exit_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        private void btnNuovaSimulazione_Click(object sender, EventArgs e)
+        private void Reset_Click(object sender, EventArgs e)
         {
-            Ecosystem1 Avvio = new Ecosystem1();
+            Ecosystem1 Game = new Ecosystem1();
             this.Hide();
-            Avvio.ShowDialog();
+            Game.ShowDialog();
             this.Close();
         }
     }

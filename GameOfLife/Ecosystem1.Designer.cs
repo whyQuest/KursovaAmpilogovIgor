@@ -43,12 +43,14 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.nudYpos = new System.Windows.Forms.NumericUpDown();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudRabbit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudWolf)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudCarrot)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.intervallSpawn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudXpos)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudYpos)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // lblTitolo
@@ -166,7 +168,7 @@
             this.label1.TabIndex = 8;
             this.label1.Text = "Nuova carota ogni ";
             // 
-            // nudIntervalloCarote
+            // intervallSpawn
             // 
             this.intervallSpawn.Location = new System.Drawing.Point(496, 249);
             this.intervallSpawn.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
@@ -175,7 +177,7 @@
             0,
             0,
             0});
-            this.intervallSpawn.Name = "nudIntervalloCarote";
+            this.intervallSpawn.Name = "intervallSpawn";
             this.intervallSpawn.Size = new System.Drawing.Size(68, 35);
             this.intervallSpawn.TabIndex = 7;
             this.intervallSpawn.Value = new decimal(new int[] {
@@ -277,11 +279,20 @@
             this.nudYpos.ValueChanged += new System.EventHandler(this.ValueChanged);
             this.nudYpos.VisibleChanged += new System.EventHandler(this.ValueChanged);
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(556, 7);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(241, 241);
+            this.pictureBox1.TabIndex = 11;
+            this.pictureBox1.TabStop = false;
+            // 
             // Ecosystem1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 27F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(803, 350);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.Play);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -307,6 +318,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.intervallSpawn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudXpos)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudYpos)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -329,5 +341,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.NumericUpDown nudYpos;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
