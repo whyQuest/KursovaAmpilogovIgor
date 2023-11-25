@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GameOfLife.Properties {
+namespace Ecosystem.Properties {
     using System;
     
     

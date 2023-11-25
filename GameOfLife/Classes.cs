@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using System.Threading;
 using System.Collections.Concurrent;
 
-namespace GameOfLife
+namespace Ecosystem
 {
     public class SemaphoreQueue
     {
@@ -45,63 +45,63 @@ namespace GameOfLife
         }
     }
 
-    public class FineSimulazioneEventArgs : EventArgs
+    public class SimulateUPEventArgs : EventArgs
     {
-        public int ConigliRimasti { get; set; }
-        public int LupiRimasti { get; set; }
+        public int rabbitLive { get; set; }
+        public int wolfLive { get; set; }
 
-        public FineSimulazioneEventArgs(int conigliRimasti, int lupiRimasti)
+        public SimulateUPEventArgs(int conigliRimasti, int lupiRimasti)
         {
-            ConigliRimasti = conigliRimasti;
-            LupiRimasti = lupiRimasti;
+            rabbitLive = conigliRimasti;
+            wolfLive = lupiRimasti;
         }
     }
 
-    public class CellaAggiornataEventArgs
+    public class CellsUPEventArgs
     {
         public int X { get; set; }
         public int Y { get; set; }
-        public CElemento Elemento { get; set; }
+        public ElementG Elements { get; set; }
 
-        public CellaAggiornataEventArgs(int X, int Y, CElemento Elemento)
+        public CellsUPEventArgs(int X, int Y, ElementG Elemento)
         {
-            this.X = X; this.Y = Y; this.Elemento = Elemento;
+            this.X = X; this.Y = Y; this.Elements = Elemento;
         }
     }
 
-    public class Griglia
+    public class Nets
     {
         private int intervalloCarote;
         public Random rnd { get; set; }
-        public CCella[,] Celle { get; set; }
+        public CCella[,] cells { get; set; }
         public int Larghezza { get; set; }
         public int Altezza { get; set; }
         private SemaphoreQueue simulazioneFinitaMutex = new SemaphoreQueue(1, 1);
-        public bool SimulazioneFinita { get; set; }
+        public bool simulateFinish { get; set; }
         private SemaphoreQueue numConigliMutex = new SemaphoreQueue(1, 1);
         private SemaphoreQueue numLupiMutex = new SemaphoreQueue(1, 1);
         public int NumConigli { get; set; }
         public int NumLupi { get; set; }
-        public Griglia(int larghezza, int altezza)
+        public Nets(int larghezza, int altezza)
         {
-            Celle = new CCella[larghezza, altezza];
+            cells = new CCella[larghezza, altezza];
             Larghezza = larghezza;
             Altezza = altezza;
             
             for(int i=0; i<larghezza; i++)
             {
                 for (int j = 0; j < altezza; j++)
-                    Celle[i, j] = new CCella(i, j);
+                    cells[i, j] = new CCella(i, j);
             }
 
             SimulazioneInPausa = true;
         }
 
-        public void Inizializza(int numConigli, int numLupi, int numCarote, int intervalloCarote)
+        public void Init(int numConigli, int numLupi, int numCarote, int intervalloCarote)
         {
             NumConigli = numConigli;
             NumLupi = numLupi;
-            SimulazioneFinita = false;
+            simulateFinish = false;
             this.intervalloCarote = intervalloCarote*1000;
             int[,] Combinazioni = new int[Larghezza * Altezza, 2];
             int[] indiciCombinazioni = new int[Larghezza * Altezza];
@@ -119,24 +119,24 @@ namespace GameOfLife
             int i = 0;
             for (int j = 0; j < numConigli; j++)
             {
-                Celle[Combinazioni[indiciCombinazioni[i], 0], Combinazioni[indiciCombinazioni[i], 1]].Elemento = new CConiglio(Combinazioni[indiciCombinazioni[i], 0], Combinazioni[indiciCombinazioni[i], 1], this);
+                cells[Combinazioni[indiciCombinazioni[i], 0], Combinazioni[indiciCombinazioni[i], 1]].Element = new Rabbit(Combinazioni[indiciCombinazioni[i], 0], Combinazioni[indiciCombinazioni[i], 1], this);
                 i++;
             }
             for (int j = 0; j < numLupi; j++)
             {
-                Celle[Combinazioni[indiciCombinazioni[i], 0], Combinazioni[indiciCombinazioni[i], 1]].Elemento = new CLupo(Combinazioni[indiciCombinazioni[i], 0], Combinazioni[indiciCombinazioni[i], 1], this);
+                cells[Combinazioni[indiciCombinazioni[i], 0], Combinazioni[indiciCombinazioni[i], 1]].Element = new Wolf(Combinazioni[indiciCombinazioni[i], 0], Combinazioni[indiciCombinazioni[i], 1], this);
                 i++;
             }
             for (int j = 0; j < numCarote; j++)
             {
-                Celle[Combinazioni[indiciCombinazioni[i], 0], Combinazioni[indiciCombinazioni[i], 1]].Elemento = new CCarota(Combinazioni[indiciCombinazioni[i], 0], Combinazioni[indiciCombinazioni[i], 1], this);
+                cells[Combinazioni[indiciCombinazioni[i], 0], Combinazioni[indiciCombinazioni[i], 1]].Element = new Carrot(Combinazioni[indiciCombinazioni[i], 0], Combinazioni[indiciCombinazioni[i], 1], this);
                 i++;
             }
 
-            foreach(CCella c in Celle)
+            foreach(CCella c in cells)
             {
-                (c.Elemento as CAnimale)?.DiminuisciVita();
-                (c.Elemento as CAnimale)?.Muovi();
+                (c.Element as AnimalSett)?.DiminuisciVita();
+                (c.Element as AnimalSett)?.Muovi();
             }
 
             InserisciCarote();
@@ -151,8 +151,8 @@ namespace GameOfLife
             if(NumConigli == 0)
             {
                 await simulazioneFinitaMutex.WaitAsync();
-                SimulazioneFinita = true;
-                OnFineSimulazione(new FineSimulazioneEventArgs(NumConigli, NumLupi));
+                simulateFinish = true;
+                OnFineSimulazione(new SimulateUPEventArgs(NumConigli, NumLupi));
                 simulazioneFinitaMutex.Release();
             }
 
@@ -168,8 +168,8 @@ namespace GameOfLife
             if (NumLupi == 0)
             {
                 await simulazioneFinitaMutex.WaitAsync();
-                SimulazioneFinita = true;
-                OnFineSimulazione(new FineSimulazioneEventArgs(NumConigli, NumLupi));
+                simulateFinish = true;
+                OnFineSimulazione(new SimulateUPEventArgs(NumConigli, NumLupi));
                 simulazioneFinitaMutex.Release();
             }
 
@@ -180,7 +180,7 @@ namespace GameOfLife
         {
             while (true)
             {
-                if (SimulazioneFinita)
+                if (simulateFinish)
                 {
                     return;
                 }
@@ -192,19 +192,19 @@ namespace GameOfLife
                     bool cellaVuotaTrovata = false;
                     while (!cellaVuotaTrovata)
                     {
-                        x = rnd.Next(0, Celle.GetLength(0));
-                        y = rnd.Next(0, Celle.GetLength(1));
+                        x = rnd.Next(0, cells.GetLength(0));
+                        y = rnd.Next(0, cells.GetLength(1));
 
-                        await Celle[x, y].OttieniAccessoAsync();
-                        if (Celle[x, y].Elemento == null)
+                        await cells[x, y].OttieniAccessoAsync();
+                        if (cells[x, y].Element == null)
                         {
                             cellaVuotaTrovata = true;
-                            Celle[x, y].Elemento = new CCarota(x, y, this);
-                            Celle[x, y].AggiornaCella();
+                            cells[x, y].Element = new Carrot(x, y, this);
+                            cells[x, y].AggiornaCella();
                         }
                         try
                         {
-                            Celle[x, y].RilasciaAccesso();
+                            cells[x, y].RilasciaAccesso();
                         }
                         catch(Exception e)
                         {
@@ -218,35 +218,35 @@ namespace GameOfLife
         }
 
         public bool SimulazioneInPausa { get; set; }
-        public void Avvia()
+        public void Play()
         {
             SimulazioneInPausa = false;
         }
 
-        public void Pausa()
+        public void Pause()
         {
             SimulazioneInPausa = true;
         }
 
-        public void Stoppa()
+        public void Stop()
         {
-            SimulazioneFinita = true;
-            OnFineSimulazione(new FineSimulazioneEventArgs(NumConigli, NumLupi));
+            simulateFinish = true;
+            OnFineSimulazione(new SimulateUPEventArgs(NumConigli, NumLupi));
         }
 
-        private void OnFineSimulazione(FineSimulazioneEventArgs e)
+        private void OnFineSimulazione(SimulateUPEventArgs e)
         {
-            FineSimulazione?.Invoke(this, e);
+            Simulate?.Invoke(this, e);
         }
 
-        public event EventHandler<FineSimulazioneEventArgs> FineSimulazione;
+        public event EventHandler<SimulateUPEventArgs> Simulate;
 
     }
 
     public class CCella
     { 
         private SemaphoreQueue semaforo = new SemaphoreQueue(1, 1);
-        public CElemento Elemento { get; set; }
+        public ElementG Element { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
 
@@ -255,15 +255,15 @@ namespace GameOfLife
             this.X = X; this.Y = Y;
         }
 
-        public event EventHandler<CellaAggiornataEventArgs> CellaAggiornata;
+        public event EventHandler<CellsUPEventArgs> CellsUP;
 
-        protected void OnCellaAggiornata(CellaAggiornataEventArgs e)
+        protected void OnCellaAggiornata(CellsUPEventArgs e)
         {
-            CellaAggiornata?.Invoke(this, e);
+            CellsUP?.Invoke(this, e);
         }
         public void AggiornaCella()
         {
-            CellaAggiornataEventArgs e = new CellaAggiornataEventArgs(X, Y, Elemento);
+            CellsUPEventArgs e = new CellsUPEventArgs(X, Y, Element);
             OnCellaAggiornata(e);
         }
 
@@ -280,15 +280,15 @@ namespace GameOfLife
 
         public void Elimina()
         {
-            Elemento = null;
+            Element = null;
             AggiornaCella();
         }
     }
 
-    public abstract class CElemento
+    public abstract class ElementG
     {
-        protected Griglia griglia;
-        public CElemento(int X, int Y, Griglia griglia)
+        protected Nets griglia;
+        public ElementG(int X, int Y, Nets griglia)
         {
             this.X = X;
             this.Y = Y;
@@ -318,23 +318,23 @@ namespace GameOfLife
             Eliminato = eliminato;
         }
     }
-    public abstract class CAnimale : CElemento
+    public abstract class AnimalSett : ElementG
     {
         public SemaphoreQueue vitaMutex = new SemaphoreQueue(1, 1);
         public int Vita { get; set; }
-        public CAnimale(int X, int Y, Griglia griglia) : base(X, Y, griglia) { Vita = 10; }
+        public AnimalSett(int X, int Y, Nets griglia) : base(X, Y, griglia) { Vita = 10; }
 
         public void AnalizzaCella(int xCella, int yCella, ref int newX, ref int newY, ref bool NuovaPosizioneTrovata, ref bool CiboTrovato)
         {
             // controlla se nella cella che si sta analizzando c'è del cibo
-            bool ciboPresenteNellaCella = CiboPresenteNellaCella(griglia.Celle[xCella, yCella].Elemento);
+            bool ciboPresenteNellaCella = CiboPresenteNellaCella(griglia.cells[xCella, yCella].Element);
 
             // se è già stata trovata una cella vicina con del cibo e la cella in analisi contiene del cibo
             // ha una possibilità del 50% di rendere la cella in analisi la nuova cella verso cui spostarsi
             if (CiboTrovato && ciboPresenteNellaCella && griglia.rnd.Next(0, 100) < 50)
             {
                 // non occorre più avere l'accesso della cella precedente
-                griglia.Celle[newX, newY].RilasciaAccesso();
+                griglia.cells[newX, newY].RilasciaAccesso();
 
                 newX = xCella;
                 newY = yCella;
@@ -346,7 +346,7 @@ namespace GameOfLife
             {
                 // se era già stata selezionata un'altra cella come prossima cella, rilascia l'accesso
                 if (NuovaPosizioneTrovata)
-                    griglia.Celle[newX, newY].RilasciaAccesso();
+                    griglia.cells[newX, newY].RilasciaAccesso();
 
                 newX = xCella;
                 newY = yCella;
@@ -357,11 +357,11 @@ namespace GameOfLife
             // se non è stato trovato ancora cibo, la cella in analisi non ne contiene ed è vuota, 
             // segna la cella in analisi come prossima cella se non è stata trovata nessuna nuova posizione
             // oppure segnala con il 50% di probabilità se è già stata trovata un'altra cella verso cui muoversi
-            else if (!CiboTrovato && (!NuovaPosizioneTrovata || griglia.rnd.Next(0, 100) < 50) && griglia.Celle[xCella, yCella].Elemento == null)
+            else if (!CiboTrovato && (!NuovaPosizioneTrovata || griglia.rnd.Next(0, 100) < 50) && griglia.cells[xCella, yCella].Element == null)
             {
                 // se era già stata selezionata un'altra cella come prossima cella, rilascia l'accesso
                 if (NuovaPosizioneTrovata)
-                    griglia.Celle[newX, newY].RilasciaAccesso();
+                    griglia.cells[newX, newY].RilasciaAccesso();
 
                 newX = xCella;
                 newY = yCella;
@@ -370,51 +370,51 @@ namespace GameOfLife
 
             // nel caso la cella in analisi non sia stata segnata come prossima cella, il suo accesso si può rilasciare
             if (newX != xCella || newY != yCella)
-                griglia.Celle[xCella, yCella].RilasciaAccesso();
+                griglia.cells[xCella, yCella].RilasciaAccesso();
         }
         public async void Muovi()
         {
             while (true)
             {
-                if (griglia.SimulazioneFinita)
+                if (griglia.simulateFinish)
                     return;
 
                 if (!griglia.SimulazioneInPausa)
                 {
                     if (Y > 0)
-                        await griglia.Celle[X, Y - 1].OttieniAccessoAsync();
+                        await griglia.cells[X, Y - 1].OttieniAccessoAsync();
                     if (X > 0)
-                        await griglia.Celle[X - 1, Y].OttieniAccessoAsync();
+                        await griglia.cells[X - 1, Y].OttieniAccessoAsync();
 
 
-                    await griglia.Celle[X, Y].OttieniAccessoAsync();
+                    await griglia.cells[X, Y].OttieniAccessoAsync();
 
-                    var animale = griglia.Celle[X, Y].Elemento as CAnimale;
+                    var animale = griglia.cells[X, Y].Element as AnimalSett;
                     if (animale != null)
                     {
                         if(animale.Vita == 0)
                         {
-                            griglia.Celle[X, Y].Elimina();
+                            griglia.cells[X, Y].Elimina();
                             await DiminuisciContatore();
                         }
                     }
 
-                    if (griglia.Celle[X, Y].Elemento != this)
+                    if (griglia.cells[X, Y].Element != this)
                     {
-                        griglia.Celle[X, Y].RilasciaAccesso();
+                        griglia.cells[X, Y].RilasciaAccesso();
                         
                         if (Y > 0)
-                            griglia.Celle[X, Y - 1].RilasciaAccesso();
+                            griglia.cells[X, Y - 1].RilasciaAccesso();
                         if (X > 0)
-                            griglia.Celle[X - 1, Y].RilasciaAccesso();
+                            griglia.cells[X - 1, Y].RilasciaAccesso();
 
                         return;
                     }
 
-                    if (X < griglia.Celle.GetLength(0) - 1)
-                        await griglia.Celle[X + 1, Y].OttieniAccessoAsync();
-                    if (Y < griglia.Celle.GetLength(1) - 1)
-                        await griglia.Celle[X, Y + 1].OttieniAccessoAsync();
+                    if (X < griglia.cells.GetLength(0) - 1)
+                        await griglia.cells[X + 1, Y].OttieniAccessoAsync();
+                    if (Y < griglia.cells.GetLength(1) - 1)
+                        await griglia.cells[X, Y + 1].OttieniAccessoAsync();
 
 
                     int newX = -1, newY = -1;
@@ -431,12 +431,12 @@ namespace GameOfLife
                         AnalizzaCella(X - 1, Y, ref newX, ref newY, ref NuovaPosizioneTrovata, ref CiboTrovato);
                     }
 
-                    if (X < griglia.Celle.GetLength(0) - 1)
+                    if (X < griglia.cells.GetLength(0) - 1)
                     {
                         AnalizzaCella(X + 1, Y, ref newX, ref newY, ref NuovaPosizioneTrovata, ref CiboTrovato);
                     }
 
-                    if (Y < griglia.Celle.GetLength(1) - 1)
+                    if (Y < griglia.cells.GetLength(1) - 1)
                     {
                         AnalizzaCella(X, Y + 1, ref newX, ref newY, ref NuovaPosizioneTrovata, ref CiboTrovato);
                     }
@@ -457,15 +457,15 @@ namespace GameOfLife
                             vitaMutex.Release();
                             await DiminuisciContatoreCibo();
                         }
-                        griglia.Celle[X, Y].Elemento = this;
-                        griglia.Celle[X, Y].AggiornaCella();
-                        griglia.Celle[oldX, oldY].Elimina();
-                        griglia.Celle[oldX, oldY].RilasciaAccesso();
-                        griglia.Celle[X, Y].RilasciaAccesso();
+                        griglia.cells[X, Y].Element = this;
+                        griglia.cells[X, Y].AggiornaCella();
+                        griglia.cells[oldX, oldY].Elimina();
+                        griglia.cells[oldX, oldY].RilasciaAccesso();
+                        griglia.cells[X, Y].RilasciaAccesso();
                     }
                     else
                     {
-                        griglia.Celle[X, Y].RilasciaAccesso();
+                        griglia.cells[X, Y].RilasciaAccesso();
                     }
                 }   
 
@@ -479,7 +479,7 @@ namespace GameOfLife
         {
             while (true)
             {
-                if (griglia.SimulazioneFinita)
+                if (griglia.simulateFinish)
                     return;
 
                 if (!griglia.SimulazioneInPausa)
@@ -488,7 +488,7 @@ namespace GameOfLife
                     Vita--;
                     vitaMutex.Release();
                     int a = X, b = Y;
-                    griglia.Celle[X, Y].AggiornaCella();
+                    griglia.cells[X, Y].AggiornaCella();
 
                     if (Vita == 0)
                     {
@@ -502,15 +502,15 @@ namespace GameOfLife
 
         public abstract Task DiminuisciContatore();
 
-        public abstract bool CiboPresenteNellaCella(CElemento elemento);
+        public abstract bool CiboPresenteNellaCella(ElementG elemento);
     }
-    public class CConiglio : CAnimale
+    public class Rabbit : AnimalSett
     {
-        public CConiglio(int X, int Y, Griglia griglia) : base(X, Y, griglia) { }
+        public Rabbit(int X, int Y, Nets griglia) : base(X, Y, griglia) { }
 
-        public override bool CiboPresenteNellaCella(CElemento elemento)
+        public override bool CiboPresenteNellaCella(ElementG elemento)
         {
-            return elemento is CCarota;
+            return elemento is Carrot;
         }
 
         public override async Task DiminuisciContatore()
@@ -525,13 +525,13 @@ namespace GameOfLife
 
     }
 
-    public class CLupo : CAnimale
+    public class Wolf : AnimalSett
     {
-        public CLupo(int X, int Y, Griglia griglia) : base(X, Y, griglia) { }
+        public Wolf(int X, int Y, Nets griglia) : base(X, Y, griglia) { }
 
-        public override bool CiboPresenteNellaCella(CElemento elemento)
+        public override bool CiboPresenteNellaCella(ElementG elemento)
         {
-            return elemento is CConiglio;
+            return elemento is Rabbit;
         }
 
         public override async Task DiminuisciContatore()
@@ -545,8 +545,8 @@ namespace GameOfLife
         }
     }
 
-    public class CCarota : CElemento
+    public class Carrot : ElementG
     {
-        public CCarota(int X, int Y, Griglia griglia) : base(X, Y, griglia) { }
+        public Carrot(int X, int Y, Nets griglia) : base(X, Y, griglia) { }
     }
 }

@@ -53,17 +53,17 @@
     <Compile Include="Ecosystem1.Designer.cs">
       <DependentUpon>Ecosystem1.cs</DependentUpon>
     </Compile>
-    <Compile Include="FRisultati.cs">
+    <Compile Include="Ecosystem3.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FRisultati.Designer.cs">
-      <DependentUpon>FRisultati.cs</DependentUpon>
+    <Compile Include="Ecosystem3.Designer.cs">
+      <DependentUpon>Ecosystem3.cs</DependentUpon>
     </Compile>
-    <Compile Include="FSimulazione.cs">
+    <Compile Include="Ecosystem2.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FSimulazione.Designer.cs">
-      <DependentUpon>FSimulazione.cs</DependentUpon>
+    <Compile Include="Ecosystem2.Designer.cs">
+      <DependentUpon>Ecosystem2.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -76,11 +76,11 @@
     <EmbeddedResource Include="Ecosystem1.resx">
       <DependentUpon>Ecosystem1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FRisultati.resx">
-      <DependentUpon>FRisultati.cs</DependentUpon>
+    <EmbeddedResource Include="Ecosystem3.resx">
+      <DependentUpon>Ecosystem3.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FSimulazione.resx">
-      <DependentUpon>FSimulazione.cs</DependentUpon>
+    <EmbeddedResource Include="Ecosystem2.resx">
+      <DependentUpon>Ecosystem2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

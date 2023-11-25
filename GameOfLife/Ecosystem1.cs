@@ -8,55 +8,55 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GameOfLife
+namespace Ecosystem
 {
     public partial class Ecosystem1 : Form
     {
-        private int numConigli;
-        private int numLupi;
-        private int numCarote;
-        private int wGriglia;
-        private int hGriglia;
+        private int numbRabbit;
+        private int numbWolf;
+        private int numbCarrot;
+        private int xPOS;
+        private int yPOS;
         public Ecosystem1()
         {
             InitializeComponent();
-            numCarote = (int)nudCarote.Value;
-            numLupi = (int)nudLupi.Value;
-            numConigli = (int)nudConigli.Value;
-            wGriglia = (int)nudWGriglia.Value;
-            hGriglia = (int)nudHGriglia.Value;
+            numbCarrot = (int)nudCarrot.Value;
+            numbWolf = (int)nudWolf.Value;
+            numbRabbit = (int)nudRabbit.Value;
+            xPOS = (int)nudXpos.Value;
+            yPOS = (int)nudYpos.Value;
         }
 
-        private void btnInizia_Click(object sender, EventArgs e)
+        private void play_Click(object sender, EventArgs e)
         {
-            numCarote = (int)nudCarote.Value;
-            numLupi = (int)nudLupi.Value;
-            numConigli = (int)nudConigli.Value;
-            wGriglia = (int)nudWGriglia.Value;
-            hGriglia = (int)nudHGriglia.Value;
-            FSimulazione Gioco = new FSimulazione(wGriglia, hGriglia, numConigli, numLupi, numCarote, (int)nudIntervalloCarote.Value);
+            numbCarrot = (int)nudCarrot.Value;
+            numbWolf = (int)nudWolf.Value;
+            numbRabbit = (int)nudRabbit.Value;
+            xPOS = (int)nudXpos.Value;
+            yPOS = (int)nudYpos.Value;
+            Ecosystem2 game = new Ecosystem2(xPOS, yPOS, numbRabbit, numbWolf, numbCarrot, (int)intervallSpawn.Value);
             this.Hide();
-            Gioco.ShowDialog();
+            game.ShowDialog();
             this.Close();
         }
 
-        private void nud_ValueChanged(object sender, EventArgs e)
+        private void ValueChanged(object sender, EventArgs e)
         {
-            int numCaselle = (int)(nudWGriglia.Value * nudHGriglia.Value);
-            if((int)(nudCarote.Value + nudLupi.Value + nudConigli.Value) > numCaselle / 2){
-                nudCarote.Value = numCarote;
-                nudConigli.Value = numConigli;
-                nudLupi.Value = numLupi;
-                nudWGriglia.Value = wGriglia;
-                nudHGriglia.Value = hGriglia;
+            int numBox = (int)(nudXpos.Value * nudYpos.Value);
+            if((int)(nudCarrot.Value + nudWolf.Value + nudRabbit.Value) > numBox / 2){
+                nudCarrot.Value = numbCarrot;
+                nudRabbit.Value = numbRabbit;
+                nudWolf.Value = numbWolf;
+                nudXpos.Value = xPOS;
+                nudYpos.Value = yPOS;
             }
             else
             {
-                numCarote = (int)nudCarote.Value;
-                numLupi = (int)nudLupi.Value;
-                numConigli = (int)nudConigli.Value;
-                wGriglia = (int)nudWGriglia.Value;
-                hGriglia = (int)nudHGriglia.Value;
+                numbCarrot = (int)nudCarrot.Value;
+                numbWolf = (int)nudWolf.Value;
+                numbRabbit = (int)nudRabbit.Value;
+                xPOS = (int)nudXpos.Value;
+                yPOS = (int)nudYpos.Value;
             }
         }
     }

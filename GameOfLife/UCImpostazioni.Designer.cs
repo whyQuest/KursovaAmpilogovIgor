@@ -1,6 +1,6 @@
-﻿namespace GameOfLife
+﻿namespace Ecosystem
 {
-    partial class UCImpostazioni
+    partial class Setting
     {
         /// <summary> 
         /// Variabile di progettazione necessaria.
@@ -35,7 +35,7 @@
             // btnPlayPause
             // 
             this.btnPlayPause.BackColor = System.Drawing.Color.White;
-            this.btnPlayPause.Image = global::GameOfLife.Properties.Resources.play_button;
+            this.btnPlayPause.Image = global::Ecosystem.Properties.Resources.play_button;
             this.btnPlayPause.Location = new System.Drawing.Point(21, 14);
             this.btnPlayPause.Name = "btnPlayPause";
             this.btnPlayPause.Size = new System.Drawing.Size(32, 32);
@@ -46,7 +46,7 @@
             // btnStop
             // 
             this.btnStop.BackColor = System.Drawing.Color.White;
-            this.btnStop.Image = global::GameOfLife.Properties.Resources.stop;
+            this.btnStop.Image = global::Ecosystem.Properties.Resources.stop;
             this.btnStop.Location = new System.Drawing.Point(59, 14);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(32, 32);

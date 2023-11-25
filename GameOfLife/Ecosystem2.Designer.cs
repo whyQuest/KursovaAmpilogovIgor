@@ -1,6 +1,6 @@
-﻿namespace GameOfLife
+﻿namespace Ecosystem
 {
-    partial class FSimulazione
+    partial class Ecosystem2
     {
         /// <summary>
         /// Variabile di progettazione necessaria.
@@ -30,16 +30,16 @@
         {
             this.SuspendLayout();
             // 
-            // FSimulazione
+            // Ecosystem2
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(784, 749);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MinimumSize = new System.Drawing.Size(1, 1);
-            this.Name = "FSimulazione";
-            this.Text = "Game of life";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FSimulazione_FormClosing);
+            this.Name = "Ecosystem2";
+            this.Text = "Ecosystem2";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SimulateClose);
             this.ResumeLayout(false);
 
         }

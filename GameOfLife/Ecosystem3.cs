@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GameOfLife
+namespace Ecosystem
 {
-    public partial class FRisultati : Form
+    public partial class Ecosystem3 : Form
     {
-        public FRisultati(int ConigliRimasti, int LupiRimasti)
+        public Ecosystem3(int ConigliRimasti, int LupiRimasti)
         {
             InitializeComponent();
 

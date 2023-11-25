@@ -1,6 +1,6 @@
-﻿namespace GameOfLife
+﻿namespace Ecosystem
 {
-    partial class FRisultati
+    partial class Ecosystem3
     {
         /// <summary>
         /// Required designer variable.
@@ -50,7 +50,7 @@
             this.lblNumConigli.AutoSize = true;
             this.lblNumConigli.Location = new System.Drawing.Point(39, 70);
             this.lblNumConigli.Name = "lblNumConigli";
-            this.lblNumConigli.Size = new System.Drawing.Size(125, 20);
+            this.lblNumConigli.Size = new System.Drawing.Size(155, 25);
             this.lblNumConigli.TabIndex = 1;
             this.lblNumConigli.Text = "10 conigli rimasti";
             // 
@@ -59,7 +59,7 @@
             this.lblNumLupi.AutoSize = true;
             this.lblNumLupi.Location = new System.Drawing.Point(205, 70);
             this.lblNumLupi.Name = "lblNumLupi";
-            this.lblNumLupi.Size = new System.Drawing.Size(96, 20);
+            this.lblNumLupi.Size = new System.Drawing.Size(119, 25);
             this.lblNumLupi.TabIndex = 1;
             this.lblNumLupi.Text = "0 lupi rimasti";
             // 
@@ -83,7 +83,7 @@
             this.btnChiudi.UseVisualStyleBackColor = true;
             this.btnChiudi.Click += new System.EventHandler(this.btnChiudi_Click);
             // 
-            // FRisultati
+            // Ecosystem3
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(338, 158);
@@ -93,8 +93,8 @@
             this.Controls.Add(this.lblNumConigli);
             this.Controls.Add(this.lblRisultato);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Name = "FRisultati";
-            this.Text = "Game of life - Risultati";
+            this.Name = "Ecosystem3";
+            this.Text = "Ecosystem3";
             this.ResumeLayout(false);
             this.PerformLayout();
 
