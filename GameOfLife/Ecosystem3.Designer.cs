@@ -42,7 +42,7 @@
             this.resultTOP.Name = "resultTOP";
             this.resultTOP.Size = new System.Drawing.Size(338, 37);
             this.resultTOP.TabIndex = 0;
-            this.resultTOP.Text = "I conigli hanno vinto!";
+            this.resultTOP.Text = "Хто переміг?";
             this.resultTOP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // RabbitTOP
@@ -50,18 +50,18 @@
             this.RabbitTOP.AutoSize = true;
             this.RabbitTOP.Location = new System.Drawing.Point(39, 70);
             this.RabbitTOP.Name = "RabbitTOP";
-            this.RabbitTOP.Size = new System.Drawing.Size(155, 25);
+            this.RabbitTOP.Size = new System.Drawing.Size(90, 25);
             this.RabbitTOP.TabIndex = 1;
-            this.RabbitTOP.Text = "10 conigli rimasti";
+            this.RabbitTOP.Text = "Кролики";
             // 
             // WolfTOP
             // 
             this.WolfTOP.AutoSize = true;
             this.WolfTOP.Location = new System.Drawing.Point(205, 70);
             this.WolfTOP.Name = "WolfTOP";
-            this.WolfTOP.Size = new System.Drawing.Size(119, 25);
+            this.WolfTOP.Size = new System.Drawing.Size(66, 25);
             this.WolfTOP.TabIndex = 1;
-            this.WolfTOP.Text = "0 lupi rimasti";
+            this.WolfTOP.Text = "Вовки";
             // 
             // Reset
             // 
@@ -69,7 +69,7 @@
             this.Reset.Name = "Reset";
             this.Reset.Size = new System.Drawing.Size(168, 34);
             this.Reset.TabIndex = 2;
-            this.Reset.Text = "Nuova simulazione";
+            this.Reset.Text = "Нова гра";
             this.Reset.UseVisualStyleBackColor = true;
             this.Reset.Click += new System.EventHandler(this.Reset_Click);
             // 
@@ -79,7 +79,7 @@
             this.Exit.Name = "Exit";
             this.Exit.Size = new System.Drawing.Size(117, 34);
             this.Exit.TabIndex = 2;
-            this.Exit.Text = "Chiudi";
+            this.Exit.Text = "Вихід";
             this.Exit.UseVisualStyleBackColor = true;
             this.Exit.Click += new System.EventHandler(this.Exit_Click);
             // 

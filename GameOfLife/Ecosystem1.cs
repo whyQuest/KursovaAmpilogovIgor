@@ -59,5 +59,30 @@ namespace Ecosystem
                 yPOS = (int)nudYpos.Value;
             }
         }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void main_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Ecosystem1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

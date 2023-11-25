@@ -28,7 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.lblTitolo = new System.Windows.Forms.Label();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Ecosystem1));
+            this.main = new System.Windows.Forms.Label();
             this.nudRabbit = new System.Windows.Forms.NumericUpDown();
             this.lblNumConigli = new System.Windows.Forms.Label();
             this.lblNumLupi = new System.Windows.Forms.Label();
@@ -44,6 +45,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.nudYpos = new System.Windows.Forms.NumericUpDown();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudRabbit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudWolf)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudCarrot)).BeginInit();
@@ -53,16 +55,17 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
-            // lblTitolo
+            // main
             // 
-            this.lblTitolo.AutoSize = true;
-            this.lblTitolo.Font = new System.Drawing.Font("Arial", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitolo.Location = new System.Drawing.Point(28, 33);
-            this.lblTitolo.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.lblTitolo.Name = "lblTitolo";
-            this.lblTitolo.Size = new System.Drawing.Size(496, 93);
-            this.lblTitolo.TabIndex = 0;
-            this.lblTitolo.Text = "Game of life";
+            this.main.AutoSize = true;
+            this.main.Font = new System.Drawing.Font("Arial", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.main.Location = new System.Drawing.Point(26, 9);
+            this.main.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.main.Name = "main";
+            this.main.Size = new System.Drawing.Size(499, 93);
+            this.main.TabIndex = 0;
+            this.main.Text = "Екосистема";
+            this.main.Click += new System.EventHandler(this.main_Click);
             // 
             // nudRabbit
             // 
@@ -91,9 +94,9 @@
             this.lblNumConigli.Location = new System.Drawing.Point(59, 168);
             this.lblNumConigli.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lblNumConigli.Name = "lblNumConigli";
-            this.lblNumConigli.Size = new System.Drawing.Size(86, 27);
+            this.lblNumConigli.Size = new System.Drawing.Size(108, 27);
             this.lblNumConigli.TabIndex = 2;
-            this.lblNumConigli.Text = "Conigli";
+            this.lblNumConigli.Text = "Кроликів";
             // 
             // lblNumLupi
             // 
@@ -102,9 +105,9 @@
             this.lblNumLupi.Location = new System.Drawing.Point(59, 207);
             this.lblNumLupi.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lblNumLupi.Name = "lblNumLupi";
-            this.lblNumLupi.Size = new System.Drawing.Size(58, 27);
+            this.lblNumLupi.Size = new System.Drawing.Size(83, 27);
             this.lblNumLupi.TabIndex = 4;
-            this.lblNumLupi.Text = "Lupi";
+            this.lblNumLupi.Text = "Вовків";
             // 
             // nudWolf
             // 
@@ -133,9 +136,9 @@
             this.lblNumCarote.Location = new System.Drawing.Point(59, 246);
             this.lblNumCarote.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lblNumCarote.Name = "lblNumCarote";
-            this.lblNumCarote.Size = new System.Drawing.Size(83, 27);
+            this.lblNumCarote.Size = new System.Drawing.Size(108, 27);
             this.lblNumCarote.TabIndex = 6;
-            this.lblNumCarote.Text = "Carote";
+            this.lblNumCarote.Text = "Морквин";
             // 
             // nudCarrot
             // 
@@ -161,16 +164,16 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(333, 251);
+            this.label1.Location = new System.Drawing.Point(364, 248);
             this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(213, 27);
+            this.label1.Size = new System.Drawing.Size(252, 27);
             this.label1.TabIndex = 8;
-            this.label1.Text = "Nuova carota ogni ";
+            this.label1.Text = "Спавн морквин через";
             // 
             // intervallSpawn
             // 
-            this.intervallSpawn.Location = new System.Drawing.Point(496, 249);
+            this.intervallSpawn.Location = new System.Drawing.Point(583, 246);
             this.intervallSpawn.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
             this.intervallSpawn.Minimum = new decimal(new int[] {
             1,
@@ -190,12 +193,13 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(567, 251);
+            this.label2.Location = new System.Drawing.Point(663, 246);
             this.label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(95, 27);
+            this.label2.Size = new System.Drawing.Size(116, 27);
             this.label2.TabIndex = 9;
-            this.label2.Text = "secondi";
+            this.label2.Text = "секунд(и)";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // Play
             // 
@@ -203,7 +207,7 @@
             this.Play.Name = "Play";
             this.Play.Size = new System.Drawing.Size(191, 32);
             this.Play.TabIndex = 10;
-            this.Play.Text = "Avvia simulazione";
+            this.Play.Text = "Грати!";
             this.Play.UseVisualStyleBackColor = true;
             this.Play.Click += new System.EventHandler(this.play_Click);
             // 
@@ -239,9 +243,9 @@
             this.label3.Location = new System.Drawing.Point(59, 126);
             this.label3.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(202, 27);
+            this.label3.Size = new System.Drawing.Size(146, 27);
             this.label3.TabIndex = 2;
-            this.label3.Text = "Dimensioni griglia";
+            this.label3.Text = "Розмір поля";
             // 
             // label4
             // 
@@ -281,17 +285,31 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(556, 7);
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(583, 33);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(241, 241);
+            this.pictureBox1.Size = new System.Drawing.Size(178, 178);
             this.pictureBox1.TabIndex = 11;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Arial", 10F);
+            this.label5.Location = new System.Drawing.Point(5, 322);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(162, 19);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "Creator: I. Ampilogov";
+            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // Ecosystem1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 27F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(803, 350);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.Play);
             this.Controls.Add(this.label2);
@@ -307,11 +325,12 @@
             this.Controls.Add(this.nudXpos);
             this.Controls.Add(this.lblNumConigli);
             this.Controls.Add(this.nudRabbit);
-            this.Controls.Add(this.lblTitolo);
+            this.Controls.Add(this.main);
             this.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
             this.Name = "Ecosystem1";
             this.Text = "Ecosystem1";
+            this.Load += new System.EventHandler(this.Ecosystem1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.nudRabbit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudWolf)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudCarrot)).EndInit();
@@ -326,7 +345,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Label lblTitolo;
+        private System.Windows.Forms.Label main;
         private System.Windows.Forms.NumericUpDown nudRabbit;
         private System.Windows.Forms.Label lblNumConigli;
         private System.Windows.Forms.Label lblNumLupi;
@@ -342,5 +361,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.NumericUpDown nudYpos;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label label5;
     }
 }
