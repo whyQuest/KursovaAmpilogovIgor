@@ -71,9 +71,9 @@ namespace Ecosystem
             }
         }
 
-        private Color ColorChange(int vita)
+        private Color ColorChange(int life)
         {
-            return Color.FromArgb(100, (10 - vita) * 255 / 10, vita * 255 / 10, 0);
+            return Color.FromArgb(100, (10 - life) * 255 / 10, life * 255 / 10, 0);
         }
 
         private Image ImageElem(ElementG element)
@@ -99,7 +99,7 @@ namespace Ecosystem
             }
             else
             {
-                BeginInvoke((Action)(() => Cells[e.X, e.Y].BackColor = ColorChange(element1.Vita)));
+                BeginInvoke((Action)(() => Cells[e.X, e.Y].BackColor = ColorChange(element1.life)));
             }
         }
 

@@ -65,22 +65,24 @@
             // 
             // Reset
             // 
+            this.Reset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.Reset.Location = new System.Drawing.Point(12, 112);
             this.Reset.Name = "Reset";
             this.Reset.Size = new System.Drawing.Size(168, 34);
             this.Reset.TabIndex = 2;
             this.Reset.Text = "Нова гра";
-            this.Reset.UseVisualStyleBackColor = true;
+            this.Reset.UseVisualStyleBackColor = false;
             this.Reset.Click += new System.EventHandler(this.Reset_Click);
             // 
             // Exit
             // 
+            this.Exit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
             this.Exit.Location = new System.Drawing.Point(209, 112);
             this.Exit.Name = "Exit";
             this.Exit.Size = new System.Drawing.Size(117, 34);
             this.Exit.TabIndex = 2;
             this.Exit.Text = "Вихід";
-            this.Exit.UseVisualStyleBackColor = true;
+            this.Exit.UseVisualStyleBackColor = false;
             this.Exit.Click += new System.EventHandler(this.Exit_Click);
             // 
             // Ecosystem3

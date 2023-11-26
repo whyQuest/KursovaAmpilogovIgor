@@ -203,12 +203,13 @@
             // 
             // Play
             // 
+            this.Play.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.Play.Location = new System.Drawing.Point(556, 300);
             this.Play.Name = "Play";
             this.Play.Size = new System.Drawing.Size(191, 32);
             this.Play.TabIndex = 10;
             this.Play.Text = "Грати!";
-            this.Play.UseVisualStyleBackColor = true;
+            this.Play.UseVisualStyleBackColor = false;
             this.Play.Click += new System.EventHandler(this.play_Click);
             // 
             // nudXpos

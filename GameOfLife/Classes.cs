@@ -135,8 +135,8 @@ namespace Ecosystem
 
             foreach(CellsOK c in cells)
             {
-                (c.Element as AnimalSett)?.DiminuisciVita();
-                (c.Element as AnimalSett)?.Muovi();
+                (c.Element as AnimalSett)?.minusLife();
+                (c.Element as AnimalSett)?.Move();
             }
 
             PushCarrot();
@@ -278,7 +278,7 @@ namespace Ecosystem
         }
 
 
-        public void Elimina()
+        public void Delete()
         {
             Element = null;
             cellsUP();
@@ -307,72 +307,71 @@ namespace Ecosystem
         public int newY { get; set; }
         public bool trueok { get; set; }
 
-        public Information(bool accessoOttenuto, bool nuovaPosizioneTrovata, bool ciboTrovato,
-            int x, int y, bool eliminato)
+        public Information(bool accsses, bool newplace, bool eatsearch, int x, int y, bool trueok1)
         {
-            Accsses = accessoOttenuto;
-            newPlace = nuovaPosizioneTrovata;
-            eatSearch = ciboTrovato;
+            Accsses = accsses;
+            newPlace = newplace;
+            eatSearch = eatsearch;
             newX = x;
             newY = y;
-            trueok = eliminato;
+            trueok = trueok1;
         }
     }
     public abstract class AnimalSett : ElementG
     {
-        public Queue vitaMutex = new Queue(1, 1);
-        public int Vita { get; set; }
-        public AnimalSett(int X, int Y, Nets griglia) : base(X, Y, griglia) { Vita = 10; }
+        public Queue liveAnim = new Queue(1, 1);
+        public int life { get; set; }
+        public AnimalSett(int X, int Y, Nets net) : base(X, Y, net) { life = 10; }
 
-        public void AnalizzaCella(int xCella, int yCella, ref int newX, ref int newY, ref bool NuovaPosizioneTrovata, ref bool CiboTrovato)
+        public void Analiz(int x, int y, ref int newX, ref int newY, ref bool newPlaceTRUE, ref bool eatTRUE1)
         {
-            // controlla se nella cella che si sta analizzando c'è del cibo
-            bool ciboPresenteNellaCella = CiboPresenteNellaCella(net.cells[xCella, yCella].Element);
+            // проверяем, есть ли еда в анализируемой ячейке
+            bool eatTRUE = eatrtue(net.cells[x, y].Element);
 
-            // se è già stata trovata una cella vicina con del cibo e la cella in analisi contiene del cibo
-            // ha una possibilità del 50% di rendere la cella in analisi la nuova cella verso cui spostarsi
-            if (CiboTrovato && ciboPresenteNellaCella && net.rand.Next(0, 100) < 50)
+            // если соседняя ячейка с едой уже найдена и анализируемая ячейка содержит еду
+            // имеет 50% шанс сделать анализируемую ячейку новой ячейкой для перемещения
+            if (eatTRUE1 && eatTRUE && net.rand.Next(0, 100) < 50)
             {
-                // non occorre più avere l'accesso della cella precedente
+                // Вам больше не нужен доступ к предыдущей ячейке
                 net.cells[newX, newY].ReleaseAcc();
 
-                newX = xCella;
-                newY = yCella;
+                newX = x;
+                newY = y;
             }
 
-            // se non è ancora stata trovata una cella vicina con del cibo e la cella in analisi contiene del cibo
-            // rendi la cella in analisi la nuova cella verso cui spostarsi
-            else if (!CiboTrovato && ciboPresenteNellaCella)
+            // если ближайшая ячейка с едой еще не найдена и анализируемая ячейка содержит еду
+            // делаем анализируемую ячейку новой ячейкой для перемещения
+            else if (!eatTRUE1 && eatTRUE)
             {
-                // se era già stata selezionata un'altra cella come prossima cella, rilascia l'accesso
-                if (NuovaPosizioneTrovata)
+                // если в качестве следующей ячейки уже выбрана другая ячейка, открываем доступ
+                if (newPlaceTRUE)
                     net.cells[newX, newY].ReleaseAcc();
 
-                newX = xCella;
-                newY = yCella;
-                CiboTrovato = true;
-                NuovaPosizioneTrovata = true;
+                newX = x;
+                newY = y;
+                eatTRUE1 = true;
+                newPlaceTRUE = true;
             }
 
-            // se non è stato trovato ancora cibo, la cella in analisi non ne contiene ed è vuota, 
-            // segna la cella in analisi come prossima cella se non è stata trovata nessuna nuova posizione
-            // oppure segnala con il 50% di probabilità se è già stata trovata un'altra cella verso cui muoversi
-            else if (!CiboTrovato && (!NuovaPosizioneTrovata || net.rand.Next(0, 100) < 50) && net.cells[xCella, yCella].Element == null)
+            // если еда еще не найдена, анализируемая ячейка ее не содержит и пуста,
+            // помечаем анализируемую ячейку как следующую, если новая позиция не найдена
+            // или сообщить с вероятностью 50%, если уже найдена другая ячейка, в которую можно перейти
+            else if (!eatTRUE1 && (!newPlaceTRUE || net.rand.Next(0, 100) < 50) && net.cells[x, y].Element == null)
             {
-                // se era già stata selezionata un'altra cella come prossima cella, rilascia l'accesso
-                if (NuovaPosizioneTrovata)
+                // если в качестве следующей ячейки уже выбрана другая ячейка, открываем доступ
+                if (newPlaceTRUE)
                     net.cells[newX, newY].ReleaseAcc();
 
-                newX = xCella;
-                newY = yCella;
-                NuovaPosizioneTrovata = true;
+                newX = x;
+                newY = y;
+                newPlaceTRUE = true;
             }
 
-            // nel caso la cella in analisi non sia stata segnata come prossima cella, il suo accesso si può rilasciare
-            if (newX != xCella || newY != yCella)
-                net.cells[xCella, yCella].ReleaseAcc();
+            // если анализируемая ячейка не помечена как следующая, доступ к ней можно разблокировать
+            if (newX != x || newY != y)
+                net.cells[x, y].ReleaseAcc();
         }
-        public async void Muovi()
+        public async void Move()
         {
             while (true)
             {
@@ -392,10 +391,10 @@ namespace Ecosystem
                     var animale = net.cells[X, Y].Element as AnimalSett;
                     if (animale != null)
                     {
-                        if(animale.Vita == 0)
+                        if(animale.life == 0)
                         {
-                            net.cells[X, Y].Elimina();
-                            await DiminuisciContatore();
+                            net.cells[X, Y].Delete();
+                            await minusC4ET();
                         }
                     }
 
@@ -418,48 +417,48 @@ namespace Ecosystem
 
 
                     int newX = -1, newY = -1;
-                    bool CiboTrovato = false, NuovaPosizioneTrovata = false;
+                    bool eatTRUE = false, newPlaceOK = false;
 
 
                     if (Y > 0)
                     {
-                        AnalizzaCella(X, Y - 1, ref newX, ref newY, ref NuovaPosizioneTrovata, ref CiboTrovato);
+                        Analiz(X, Y - 1, ref newX, ref newY, ref newPlaceOK, ref eatTRUE);
                     }
 
                     if (X > 0)
                     {
-                        AnalizzaCella(X - 1, Y, ref newX, ref newY, ref NuovaPosizioneTrovata, ref CiboTrovato);
+                        Analiz(X - 1, Y, ref newX, ref newY, ref newPlaceOK, ref eatTRUE);
                     }
 
                     if (X < net.cells.GetLength(0) - 1)
                     {
-                        AnalizzaCella(X + 1, Y, ref newX, ref newY, ref NuovaPosizioneTrovata, ref CiboTrovato);
+                        Analiz(X + 1, Y, ref newX, ref newY, ref newPlaceOK, ref eatTRUE);
                     }
 
                     if (Y < net.cells.GetLength(1) - 1)
                     {
-                        AnalizzaCella(X, Y + 1, ref newX, ref newY, ref NuovaPosizioneTrovata, ref CiboTrovato);
+                        Analiz(X, Y + 1, ref newX, ref newY, ref newPlaceOK, ref eatTRUE);
                     }
 
                     
 
-                    if (NuovaPosizioneTrovata)
+                    if (newPlaceOK)
                     {
                         int oldX, oldY;
                         oldX = X;
                         oldY = Y;
                         X = newX;
                         Y = newY;
-                        if (CiboTrovato)
+                        if (eatTRUE)
                         {
-                            await vitaMutex.WaitAsync();
-                            Vita = 10;
-                            vitaMutex.Release();
-                            await DiminuisciContatoreCibo();
+                            await liveAnim.WaitAsync();
+                            life = 10;
+                            liveAnim.Release();
+                            await minusC4ETeat();
                         }
                         net.cells[X, Y].Element = this;
                         net.cells[X, Y].cellsUP();
-                        net.cells[oldX, oldY].Elimina();
+                        net.cells[oldX, oldY].Delete();
                         net.cells[oldX, oldY].ReleaseAcc();
                         net.cells[X, Y].ReleaseAcc();
                     }
@@ -473,9 +472,9 @@ namespace Ecosystem
             }
         }
 
-        public abstract Task DiminuisciContatoreCibo();
+        public abstract Task minusC4ETeat();
 
-        public async void DiminuisciVita()
+        public async void minusLife()
         {
             while (true)
             {
@@ -484,13 +483,13 @@ namespace Ecosystem
 
                 if (!net.SimulatePause)
                 {
-                    await vitaMutex.WaitAsync();
-                    Vita--;
-                    vitaMutex.Release();
+                    await liveAnim.WaitAsync();
+                    life--;
+                    liveAnim.Release();
                     int a = X, b = Y;
                     net.cells[X, Y].cellsUP();
 
-                    if (Vita == 0)
+                    if (life == 0)
                     {
                         return;
                     }
@@ -500,25 +499,25 @@ namespace Ecosystem
             }
         }
 
-        public abstract Task DiminuisciContatore();
+        public abstract Task minusC4ET();
 
-        public abstract bool CiboPresenteNellaCella(ElementG elemento);
+        public abstract bool eatrtue(ElementG element);
     }
     public class Rabbit : AnimalSett
     {
-        public Rabbit(int X, int Y, Nets griglia) : base(X, Y, griglia) { }
+        public Rabbit(int X, int Y, Nets net) : base(X, Y, net) { }
 
-        public override bool CiboPresenteNellaCella(ElementG elemento)
+        public override bool eatrtue(ElementG element)
         {
-            return elemento is Carrot;
+            return element is Carrot;
         }
 
-        public override async Task DiminuisciContatore()
+        public override async Task minusC4ET()
         {
             await net.CountRabbitMinus();
         }
 
-        public override async Task DiminuisciContatoreCibo()
+        public override async Task minusC4ETeat()
         {
             await Task.Delay(0);
         }
@@ -527,19 +526,19 @@ namespace Ecosystem
 
     public class Wolf : AnimalSett
     {
-        public Wolf(int X, int Y, Nets griglia) : base(X, Y, griglia) { }
+        public Wolf(int X, int Y, Nets net) : base(X, Y, net) { }
 
-        public override bool CiboPresenteNellaCella(ElementG elemento)
+        public override bool eatrtue(ElementG element)
         {
-            return elemento is Rabbit;
+            return element is Rabbit;
         }
 
-        public override async Task DiminuisciContatore()
+        public override async Task minusC4ET()
         {
             await net.CountWolfMinus();
         }
 
-        public override async Task DiminuisciContatoreCibo()
+        public override async Task minusC4ETeat()
         {
             await net.CountRabbitMinus();
         }
@@ -547,6 +546,6 @@ namespace Ecosystem
 
     public class Carrot : ElementG
     {
-        public Carrot(int X, int Y, Nets griglia) : base(X, Y, griglia) { }
+        public Carrot(int X, int Y, Nets net) : base(X, Y, net) { }
     }
 }
