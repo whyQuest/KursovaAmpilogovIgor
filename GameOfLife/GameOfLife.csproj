@@ -67,11 +67,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UCImpostazioni.cs">
+    <Compile Include="Settings.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UCImpostazioni.Designer.cs">
-      <DependentUpon>UCImpostazioni.cs</DependentUpon>
+    <Compile Include="Settings.Designer.cs">
+      <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Ecosystem1.resx">
       <DependentUpon>Ecosystem1.cs</DependentUpon>
@@ -92,8 +92,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="UCImpostazioni.resx">
-      <DependentUpon>UCImpostazioni.cs</DependentUpon>
+    <EmbeddedResource Include="Settings.resx">
+      <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">

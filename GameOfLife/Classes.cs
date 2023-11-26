@@ -60,29 +60,39 @@ namespace Ecosystem
         }
     }
 
-    //клас що зберігає інфу скільки живих кролів і вовків
-    public class SimulateUPEventArgs : EventArgs
+    //базовий класс для наших елементів на сітці
+    public abstract class ElementG
     {
-        public int rabbitLive { get; set; }
-        public int wolfLive { get; set; }
-
-        public SimulateUPEventArgs(int rabbitLive, int WolfLive)
+        protected Nets net;
+        public ElementG(int X, int Y, Nets Net)
         {
-            this.rabbitLive = rabbitLive;
-            wolfLive = WolfLive;
+            this.X = X;
+            this.Y = Y;
+            this.net = Net;
         }
-    }
-
-    //клас що зберігає інфу про зміни в конкретній клітині на сітці
-    public class CellsUPEventArgs
-    {
         public int X { get; set; }
         public int Y { get; set; }
-        public ElementG Elements { get; set; }
+    }
 
-        public CellsUPEventArgs(int X, int Y, ElementG Element)
+
+    //клас який містить інформацію про ячейку куди може переміститись об'єкт, та де знаходится їжа
+    public class Information
+    {
+        public bool Accsses { get; set; }
+        public bool newPlace { get; set; }
+        public bool eatSearch { get; set; }
+        public int newX { get; set; }
+        public int newY { get; set; }
+        public bool trueok { get; set; }
+
+        public Information(bool accsses, bool newplace, bool eatsearch, int x, int y, bool trueok1)
         {
-            this.X = X; this.Y = Y; this.Elements = Element;
+            Accsses = accsses;
+            newPlace = newplace;
+            eatSearch = eatsearch;
+            newX = x;
+            newY = y;
+            trueok = trueok1;
         }
     }
 
@@ -252,7 +262,7 @@ namespace Ecosystem
                         }
                         catch(Exception e)
                         {
-
+                           
                         }
                     }
                 }
@@ -337,42 +347,6 @@ namespace Ecosystem
         {
             Element = null;
             cellsUP();
-        }
-    }
-
-    //базовий класс для наших елементів на сітці
-    public abstract class ElementG
-    {
-        protected Nets net;
-        public ElementG(int X, int Y, Nets Net)
-        {
-            this.X = X;
-            this.Y = Y;
-            this.net = Net;
-        }
-        public int X { get; set; }
-        public int Y { get; set; }
-    }
-
-
-    //клас який містить інформацію про ячейку куди може переміститись об'єкт, та де знаходится їжа
-    public class Information
-    {
-        public bool Accsses { get; set; }
-        public bool newPlace { get; set; }
-        public bool eatSearch { get; set; }
-        public int newX { get; set; }
-        public int newY { get; set; }
-        public bool trueok { get; set; }
-
-        public Information(bool accsses, bool newplace, bool eatsearch, int x, int y, bool trueok1)
-        {
-            Accsses = accsses;
-            newPlace = newplace;
-            eatSearch = eatsearch;
-            newX = x;
-            newY = y;
-            trueok = trueok1;
         }
     }
 
@@ -639,5 +613,31 @@ namespace Ecosystem
     public class Carrot : ElementG
     {
         public Carrot(int X, int Y, Nets net) : base(X, Y, net) { }
+    }
+
+    //клас що зберігає інфу скільки живих кролів і вовків
+    public class SimulateUPEventArgs : EventArgs
+    {
+        public int rabbitLive { get; set; }
+        public int wolfLive { get; set; }
+
+        public SimulateUPEventArgs(int rabbitLive, int WolfLive)
+        {
+            this.rabbitLive = rabbitLive;
+            wolfLive = WolfLive;
+        }
+    }
+
+    //клас що зберігає інфу про зміни в конкретній клітині на сітці
+    public class CellsUPEventArgs
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+        public ElementG Elements { get; set; }
+
+        public CellsUPEventArgs(int X, int Y, ElementG Element)
+        {
+            this.X = X; this.Y = Y; this.Elements = Element;
+        }
     }
 }

@@ -99,6 +99,7 @@ namespace Ecosystem
         }
 
 
+        //відображаємо елементи клітин на полі
         public void UPcells(object sender, CellsUPEventArgs e)
         {
             BeginInvoke((Action)(() => Cells[e.X, e.Y].Image = ImageElem(e.Elements)));
