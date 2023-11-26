@@ -27,6 +27,8 @@ namespace Ecosystem
             yPOS = (int)nudYpos.Value;
         }
 
+
+        //зчитуємо інфу, яку ввів користувач і передаємо її
         private void play_Click(object sender, EventArgs e)
         {
             numbCarrot = (int)nudCarrot.Value;
@@ -40,9 +42,12 @@ namespace Ecosystem
             this.Close();
         }
 
+
+        //метод, коли ми змінюємо числа в нашому інтерфейсі
         private void ValueChanged(object sender, EventArgs e)
         {
             int numBox = (int)(nudXpos.Value * nudYpos.Value);
+            //перевірка, що об'єктів на полі буде не більше ніж половина від загальної к-ть клітинок
             if((int)(nudCarrot.Value + nudWolf.Value + nudRabbit.Value) > numBox / 2){
                 nudCarrot.Value = numbCarrot;
                 nudRabbit.Value = numbRabbit;

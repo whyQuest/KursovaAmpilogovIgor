@@ -10,15 +10,20 @@ using System.Collections.Concurrent;
 
 namespace Ecosystem
 {
+
+    //клас,що реалізує механізм черги для асинхронної обробки задач за допомогою семафора.
     public class Queue
     {
+        //об'єкт який використовується для обмеження кількості одночасних доступів
         private SemaphoreSlim semaphore;
+        //об'єкт черги, який використовується для зберігання завдань, що очікують на доступ до ресурсу.
         private ConcurrentQueue<TaskCompletionSource<bool>> queue =
             new ConcurrentQueue<TaskCompletionSource<bool>>();
         public Queue(int initCount)
         {
             semaphore = new SemaphoreSlim(initCount);
         }
+        //Синхронний метод очікування на доступ до ресурсу.
         public Queue(int initCount, int maxCount)
         {
             semaphore = new SemaphoreSlim(initCount, maxCount);
@@ -27,24 +32,35 @@ namespace Ecosystem
         {
             WaitAsync().Wait();
         }
+        //Асинхронний метод очікування на доступ до ресурсу.
+        //Створює об'єкт завдання,
+        //додає його до черги та повертає завдання для асинхронного очікування.
         public Task WaitAsync()
         {
+            //створюємо об'єкт наших завдань
             var tcs = new TaskCompletionSource<bool>();
+            //додаємо наш об'єкт до черги
             queue.Enqueue(tcs);
+            //викликаємо асинхронний метод. якщо все ок викликаємо ContinueWith, який виконується після завершення очікування.
             semaphore.WaitAsync().ContinueWith(t =>
             {
+                //обираємо об'єкт з нашої черги
                 TaskCompletionSource<bool> popped;
+                //якщо все ок, даний об'єкт (завдання) отримує доступ до ресурсу
                 if (queue.TryDequeue(out popped))
                     popped.SetResult(true);
             });
             return tcs.Task;
         }
+
+        //вивільняємо ресурси черги
         public void Release()
         {
             semaphore.Release();
         }
     }
 
+    //клас що зберігає інфу скільки живих кролів і вовків
     public class SimulateUPEventArgs : EventArgs
     {
         public int rabbitLive { get; set; }
@@ -57,6 +73,7 @@ namespace Ecosystem
         }
     }
 
+    //клас що зберігає інфу про зміни в конкретній клітині на сітці
     public class CellsUPEventArgs
     {
         public int X { get; set; }
@@ -82,6 +99,8 @@ namespace Ecosystem
         private Queue numWolfM = new Queue(1, 1);
         public int NumRabbit { get; set; }
         public int NumWolf { get; set; }
+
+        // створюємо сітку гри, де будуть додані кролики, вовки та морква
         public Nets(int lenght, int height)
         {
             cells = new CellsOK[lenght, height];
@@ -99,12 +118,19 @@ namespace Ecosystem
 
         public void Init(int numbRabbit, int numbWolf, int numCarrot, int intervallCarrot)
         {
+            //встановлюємо початкові значення кількості наших тварин
             NumRabbit = numbRabbit;
             NumWolf = numbWolf;
             simulateFinish = false;
+
+            //встановлюємо інтервал спавну моркви на полі
             this.IntervallCarrot = intervallCarrot*1000;
+
+            //створюємо координати нашої сітки
             int[,] Combi = new int[Lenght * Height, 2];
             int[] CombiINDEX = new int[Lenght * Height];
+            
+            //перемішуємо індекси масиву
             for (int x = 0; x < Lenght; x++)
             {
                 for (int y = 0; y < Height; y++)
@@ -114,11 +140,16 @@ namespace Ecosystem
                     CombiINDEX[y + x * Height] = y + x * Height;
                 }
             }
+
+            //цикли, які рандомним чином визначають де будуть розташовуватись кролики, вовки, та морква
             rand = new Random();
             CombiINDEX = CombiINDEX.OrderBy(x => rand.Next()).ToArray();
             int i = 0;
             for (int j = 0; j < numbRabbit; j++)
             {
+                //цикл, в якому ми передаємо індекси нашої сітки(рандомні), і в ці індекси додаємо наші об'єкти(вовк, кролик). Combi - є нашою сіткою,
+                //CombiINDEX - містить індекси нашої сітки, яка представлена у вигляді двовимірного масиву
+                //i++ потрібен для того, щоб в наступній ітерації використовувати інши координати сітки
                 cells[Combi[CombiINDEX[i], 0], Combi[CombiINDEX[i], 1]].Element = new Rabbit(Combi[CombiINDEX[i], 0], Combi[CombiINDEX[i], 1], this);
                 i++;
             }
@@ -133,21 +164,26 @@ namespace Ecosystem
                 i++;
             }
 
+            //циклом проходимо по всій сітці, і визначаємо які з координат містять тварин, а які ні. Наділяємо їх можливістю рухатись та вмирати
             foreach(CellsOK c in cells)
             {
                 (c.Element as AnimalSett)?.minusLife();
                 (c.Element as AnimalSett)?.Move();
             }
 
+            //спавнимо моркву
             PushCarrot();
         }
 
+        //якщо кролик вмирає
         public async Task CountRabbitMinus()
         {
             await numRabbitM.WaitAsync();
 
+            //видалємо кролика
             NumRabbit--;
 
+            //якщо кроликів залишилось 0, гра завершується
             if(NumRabbit == 0)
             {
                 await modelFinish.WaitAsync();
@@ -159,6 +195,7 @@ namespace Ecosystem
             numRabbitM.Release();
         }
 
+        //якщо вовк вмирає
         public async Task CountWolfMinus()
         {
             await numWolfM.WaitAsync();
@@ -176,29 +213,36 @@ namespace Ecosystem
             numWolfM.Release();
         }
 
+        //спавн моркви
         public async void PushCarrot()
         {
             while (true)
             {
+                //якщо гра закінчена, морква перестає спавнитись
                 if (simulateFinish)
                 {
                     return;
                 }
 
+                //якщо симуляція не на паузі
                 if (!SimulatePause)
                 {
                     int x, y;
 
                     bool zeroCells = false;
+
                     while (!zeroCells)
                     {
+                        //обираємо рандомно де буде спавнитись морква
                         x = rand.Next(0, cells.GetLength(0));
                         y = rand.Next(0, cells.GetLength(1));
 
                         await cells[x, y].giveAsync();
+                        //перевірка, чи немає у ячейці об'єкта
                         if (cells[x, y].Element == null)
                         {
                             zeroCells = true;
+                            //створення нового об'єкту морква, переміщення її на сітку гри
                             cells[x, y].Element = new Carrot(x, y, this);
                             cells[x, y].cellsUP();
                         }
@@ -213,32 +257,40 @@ namespace Ecosystem
                     }
                 }
 
+                //затримуємо виконная циклу, на наш введений інтервал часу
                 await Task.Delay(IntervallCarrot);
             }
         }
 
         public bool SimulatePause { get; set; }
+
+        //якщо гра продовжена, знімаємо її з паузи
         public void Play()
         {
             SimulatePause = false;
         }
 
+        //гра на паузі
         public void Pause()
         {
             SimulatePause = true;
         }
 
+        //якщо гра завершується передаємо кількість вовків і кроликів для виводу
         public void Stop()
         {
             simulateFinish = true;
             FinSimulate(new SimulateUPEventArgs(NumRabbit, NumWolf));
         }
 
+
+        //завершуємо гру, викликаємо делегат
         private void FinSimulate(SimulateUPEventArgs e)
         {
             Simulate?.Invoke(this, e);
         }
 
+        //делегат
         public event EventHandler<SimulateUPEventArgs> Simulate;
 
     }
@@ -250,6 +302,7 @@ namespace Ecosystem
         public int X { get; set; }
         public int Y { get; set; }
 
+        //ініціалізуємо наші ячейки
         public CellsOK(int X, int Y)
         {
             this.X = X; this.Y = Y;
@@ -257,6 +310,7 @@ namespace Ecosystem
 
         public event EventHandler<CellsUPEventArgs> CellsUP;
 
+        //за допомогою цих двух методів повідомляємо, про зміну стану або вмісту ячейки
         protected void cellsUP2(CellsUPEventArgs e)
         {
             CellsUP?.Invoke(this, e);
@@ -278,6 +332,7 @@ namespace Ecosystem
         }
 
 
+        //видаляємо елемент з ячейки, і оновлюємо вміст
         public void Delete()
         {
             Element = null;
@@ -285,6 +340,7 @@ namespace Ecosystem
         }
     }
 
+    //базовий класс для наших елементів на сітці
     public abstract class ElementG
     {
         protected Nets net;
@@ -298,6 +354,8 @@ namespace Ecosystem
         public int Y { get; set; }
     }
 
+
+    //клас який містить інформацію про ячейку куди може переміститись об'єкт, та де знаходится їжа
     public class Information
     {
         public bool Accsses { get; set; }
@@ -317,6 +375,8 @@ namespace Ecosystem
             trueok = trueok1;
         }
     }
+
+    //клас з налаштуваннями об'єктів
     public abstract class AnimalSett : ElementG
     {
         public Queue liveAnim = new Queue(1, 1);
@@ -325,16 +385,17 @@ namespace Ecosystem
 
         public void Analiz(int x, int y, ref int newX, ref int newY, ref bool newPlaceTRUE, ref bool eatTRUE1)
         {
-            // проверяем, есть ли еда в анализируемой ячейке
+            // перевіряємо,чи є їжа в ячейці, яку ми аналізуємо
             bool eatTRUE = eatrtue(net.cells[x, y].Element);
 
-            // если соседняя ячейка с едой уже найдена и анализируемая ячейка содержит еду
-            // имеет 50% шанс сделать анализируемую ячейку новой ячейкой для перемещения
+            // якщо сусідня ячейка уже знайдена и ячейка містить їжу
+            // є шанс в 50%, що об'єкт переміститься на цю ячейку
             if (eatTRUE1 && eatTRUE && net.rand.Next(0, 100) < 50)
             {
-                // Вам больше не нужен доступ к предыдущей ячейке
+                // забуваємо про попередню ячейку
                 net.cells[newX, newY].ReleaseAcc();
 
+                //оновлюємо координати
                 newX = x;
                 newY = y;
             }
@@ -343,7 +404,7 @@ namespace Ecosystem
             // делаем анализируемую ячейку новой ячейкой для перемещения
             else if (!eatTRUE1 && eatTRUE)
             {
-                // если в качестве следующей ячейки уже выбрана другая ячейка, открываем доступ
+                // если в качестве следующей ячейки уже выбрана другая ячейка, открываем доступ к єтой ячейке
                 if (newPlaceTRUE)
                     net.cells[newX, newY].ReleaseAcc();
 
@@ -358,7 +419,7 @@ namespace Ecosystem
             // или сообщить с вероятностью 50%, если уже найдена другая ячейка, в которую можно перейти
             else if (!eatTRUE1 && (!newPlaceTRUE || net.rand.Next(0, 100) < 50) && net.cells[x, y].Element == null)
             {
-                // если в качестве следующей ячейки уже выбрана другая ячейка, открываем доступ
+                // если в качестве следующей ячейки уже выбрана другая ячейка, открываем доступ к єтой ячейке
                 if (newPlaceTRUE)
                     net.cells[newX, newY].ReleaseAcc();
 
@@ -375,20 +436,30 @@ namespace Ecosystem
         {
             while (true)
             {
+
+                //якщо гра закінчена, цикл завершується
                 if (net.simulateFinish)
                     return;
 
+
+
                 if (!net.SimulatePause)
                 {
+
+                    //відкриваємо доступ до ячейок
                     if (Y > 0)
                         await net.cells[X, Y - 1].giveAsync();
                     if (X > 0)
                         await net.cells[X - 1, Y].giveAsync();
 
 
+                    //даємо доступ до поточної ячейки
                     await net.cells[X, Y].giveAsync();
 
+                    //отримуємо об'єкт, що знаходиться в поточній ячейці
                     var animale = net.cells[X, Y].Element as AnimalSett;
+
+                    //перевірка життєвого циклу об'єкта
                     if (animale != null)
                     {
                         if(animale.life == 0)
@@ -397,7 +468,8 @@ namespace Ecosystem
                             await minusC4ET();
                         }
                     }
-
+                    // Перевірка, чи елемент в поточній клітині співпадає з поточним об'єктом.
+                    // Якщо ні, то відбувається вивільнення ресурсів та повертається з методу.
                     if (net.cells[X, Y].Element != this)
                     {
                         net.cells[X, Y].ReleaseAcc();
@@ -420,6 +492,7 @@ namespace Ecosystem
                     bool eatTRUE = false, newPlaceOK = false;
 
 
+                    //аналізуємо можливі позіції
                     if (Y > 0)
                     {
                         Analiz(X, Y - 1, ref newX, ref newY, ref newPlaceOK, ref eatTRUE);
@@ -442,6 +515,7 @@ namespace Ecosystem
 
                     
 
+                    //якщо переміщення об'єкту відбулось
                     if (newPlaceOK)
                     {
                         int oldX, oldY;
@@ -462,18 +536,24 @@ namespace Ecosystem
                         net.cells[oldX, oldY].ReleaseAcc();
                         net.cells[X, Y].ReleaseAcc();
                     }
+                    //якщо не відбулось
                     else
                     {
                         net.cells[X, Y].ReleaseAcc();
                     }
                 }   
 
+
+                //затримка перед наступним мувом
                 await Task.Delay(net.rand.Next(500, 1000));
             }
         }
 
+        //зменшення їжі
         public abstract Task minusC4ETeat();
 
+
+        //метод, що викликається коли хтось вмирає
         public async void minusLife()
         {
             while (true)
@@ -483,10 +563,13 @@ namespace Ecosystem
 
                 if (!net.SimulatePause)
                 {
+                    //блокуємо доступ
                     await liveAnim.WaitAsync();
                     life--;
+                    //звільнення блокування
                     liveAnim.Release();
                     int a = X, b = Y;
+                    //коли об'єкт вмирає оновлюємо інфу про ячейку
                     net.cells[X, Y].cellsUP();
 
                     if (life == 0)
@@ -507,16 +590,20 @@ namespace Ecosystem
     {
         public Rabbit(int X, int Y, Nets net) : base(X, Y, net) { }
 
+
+        //кролик з'їв моркву
         public override bool eatrtue(ElementG element)
         {
             return element is Carrot;
         }
 
+        //кролик вмер
         public override async Task minusC4ET()
         {
             await net.CountRabbitMinus();
         }
 
+        //кролика з'їв вовк
         public override async Task minusC4ETeat()
         {
             await Task.Delay(0);
@@ -528,22 +615,27 @@ namespace Ecosystem
     {
         public Wolf(int X, int Y, Nets net) : base(X, Y, net) { }
 
+
+        //вовк з'їв кролика
         public override bool eatrtue(ElementG element)
         {
             return element is Rabbit;
         }
 
+        //вовк вмер
         public override async Task minusC4ET()
         {
             await net.CountWolfMinus();
         }
 
+        //вовк з'їв кролика, оновлюємо к-ть кроликів
         public override async Task minusC4ETeat()
         {
             await net.CountRabbitMinus();
         }
     }
 
+    //морква
     public class Carrot : ElementG
     {
         public Carrot(int X, int Y, Nets net) : base(X, Y, net) { }

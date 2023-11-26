@@ -15,11 +15,14 @@ namespace Ecosystem
     public partial class Ecosystem2 : Form
     {         
         public Nets net { get; set; }
+        //розмір клітини (НЕ ЗМІНЮВАТИ)
         public const int boxes = 40;
         private int intSpawnCarrot;
 
         public PictureBox[,] Cells;
 
+
+        //об'єкт, щоб розмістити кнопки СТАРТ, СТОП, ПАУЗА
         private Panel panel;
 
         public Ecosystem2(int xPos, int yPos, int numbRabbit, int numbWolf, int numbCarrot, int intervallSpawn)
@@ -39,16 +42,20 @@ namespace Ecosystem
             this.Controls.Add(panel);
 
 
+            //створення поля
             net = new Nets(xPos, yPos);
 
             net.Simulate += Result;
 
+            //викликаємо метод розміщення об'єктів
             net.Init(numbRabbit, numbWolf, numbCarrot, intervallSpawn);
 
             intSpawnCarrot = intervallSpawn;
             this.AutoSize = true;
             this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-        
+
+
+            //Створення та налаштування графічних елементів для відображення клітин екосистеми.
             Cells = new PictureBox[xPos, yPos];
             for (int x = 0; x < xPos; x++)
             {
@@ -71,11 +78,15 @@ namespace Ecosystem
             }
         }
 
+
+        //rgb зміна кольору об'єктів, яке відображає іх час до загибелі
         private Color ColorChange(int life)
         {
             return Color.FromArgb(100, (10 - life) * 255 / 10, life * 255 / 10, 0);
         }
 
+
+        //картинки
         private Image ImageElem(ElementG element)
         {
             if (element is Carrot)
@@ -103,6 +114,8 @@ namespace Ecosystem
             }
         }
 
+
+        //вивід результатів
         public async void Result(object sender, SimulateUPEventArgs e)
         {
             await Task.Delay(1000);
