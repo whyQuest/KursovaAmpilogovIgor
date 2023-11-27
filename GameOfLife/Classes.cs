@@ -23,11 +23,12 @@ namespace Ecosystem
         {
             semaphore = new SemaphoreSlim(initCount);
         }
-        //Синхронний метод очікування на доступ до ресурсу.
+      
         public Queue(int initCount, int maxCount)
         {
             semaphore = new SemaphoreSlim(initCount, maxCount);
         }
+        //Синхронний метод очікування на доступ до ресурсу.
         public void Wait()
         {
             WaitAsync().Wait();
