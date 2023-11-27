@@ -31,10 +31,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Ecosystem1));
             this.main = new System.Windows.Forms.Label();
             this.nudRabbit = new System.Windows.Forms.NumericUpDown();
-            this.lblNumConigli = new System.Windows.Forms.Label();
-            this.lblNumLupi = new System.Windows.Forms.Label();
+            this.lblNumRabbit = new System.Windows.Forms.Label();
+            this.lblNumWolf = new System.Windows.Forms.Label();
             this.nudWolf = new System.Windows.Forms.NumericUpDown();
-            this.lblNumCarote = new System.Windows.Forms.Label();
+            this.lblNumCarrot = new System.Windows.Forms.Label();
             this.nudCarrot = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.intervallSpawn = new System.Windows.Forms.NumericUpDown();
@@ -87,27 +87,27 @@
             this.nudRabbit.ValueChanged += new System.EventHandler(this.ValueChanged);
             this.nudRabbit.VisibleChanged += new System.EventHandler(this.ValueChanged);
             // 
-            // lblNumConigli
+            // lblNumRabbit
             // 
-            this.lblNumConigli.AutoSize = true;
-            this.lblNumConigli.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNumConigli.Location = new System.Drawing.Point(59, 168);
-            this.lblNumConigli.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.lblNumConigli.Name = "lblNumConigli";
-            this.lblNumConigli.Size = new System.Drawing.Size(108, 27);
-            this.lblNumConigli.TabIndex = 2;
-            this.lblNumConigli.Text = "Кроликів";
+            this.lblNumRabbit.AutoSize = true;
+            this.lblNumRabbit.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblNumRabbit.Location = new System.Drawing.Point(59, 168);
+            this.lblNumRabbit.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.lblNumRabbit.Name = "lblNumRabbit";
+            this.lblNumRabbit.Size = new System.Drawing.Size(108, 27);
+            this.lblNumRabbit.TabIndex = 2;
+            this.lblNumRabbit.Text = "Кроликів";
             // 
-            // lblNumLupi
+            // lblNumWolf
             // 
-            this.lblNumLupi.AutoSize = true;
-            this.lblNumLupi.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNumLupi.Location = new System.Drawing.Point(59, 207);
-            this.lblNumLupi.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.lblNumLupi.Name = "lblNumLupi";
-            this.lblNumLupi.Size = new System.Drawing.Size(83, 27);
-            this.lblNumLupi.TabIndex = 4;
-            this.lblNumLupi.Text = "Вовків";
+            this.lblNumWolf.AutoSize = true;
+            this.lblNumWolf.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblNumWolf.Location = new System.Drawing.Point(59, 207);
+            this.lblNumWolf.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.lblNumWolf.Name = "lblNumWolf";
+            this.lblNumWolf.Size = new System.Drawing.Size(83, 27);
+            this.lblNumWolf.TabIndex = 4;
+            this.lblNumWolf.Text = "Вовків";
             // 
             // nudWolf
             // 
@@ -129,16 +129,16 @@
             this.nudWolf.ValueChanged += new System.EventHandler(this.ValueChanged);
             this.nudWolf.VisibleChanged += new System.EventHandler(this.ValueChanged);
             // 
-            // lblNumCarote
+            // lblNumCarrot
             // 
-            this.lblNumCarote.AutoSize = true;
-            this.lblNumCarote.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNumCarote.Location = new System.Drawing.Point(59, 246);
-            this.lblNumCarote.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.lblNumCarote.Name = "lblNumCarote";
-            this.lblNumCarote.Size = new System.Drawing.Size(108, 27);
-            this.lblNumCarote.TabIndex = 6;
-            this.lblNumCarote.Text = "Морквин";
+            this.lblNumCarrot.AutoSize = true;
+            this.lblNumCarrot.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblNumCarrot.Location = new System.Drawing.Point(59, 246);
+            this.lblNumCarrot.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.lblNumCarrot.Name = "lblNumCarrot";
+            this.lblNumCarrot.Size = new System.Drawing.Size(108, 27);
+            this.lblNumCarrot.TabIndex = 6;
+            this.lblNumCarrot.Text = "Морквин";
             // 
             // nudCarrot
             // 
@@ -316,15 +316,15 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.intervallSpawn);
-            this.Controls.Add(this.lblNumCarote);
+            this.Controls.Add(this.lblNumCarrot);
             this.Controls.Add(this.nudCarrot);
-            this.Controls.Add(this.lblNumLupi);
+            this.Controls.Add(this.lblNumWolf);
             this.Controls.Add(this.nudWolf);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.nudYpos);
             this.Controls.Add(this.nudXpos);
-            this.Controls.Add(this.lblNumConigli);
+            this.Controls.Add(this.lblNumRabbit);
             this.Controls.Add(this.nudRabbit);
             this.Controls.Add(this.main);
             this.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -348,10 +348,10 @@
 
         private System.Windows.Forms.Label main;
         private System.Windows.Forms.NumericUpDown nudRabbit;
-        private System.Windows.Forms.Label lblNumConigli;
-        private System.Windows.Forms.Label lblNumLupi;
+        private System.Windows.Forms.Label lblNumRabbit;
+        private System.Windows.Forms.Label lblNumWolf;
         private System.Windows.Forms.NumericUpDown nudWolf;
-        private System.Windows.Forms.Label lblNumCarote;
+        private System.Windows.Forms.Label lblNumCarrot;
         private System.Windows.Forms.NumericUpDown nudCarrot;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown intervallSpawn;
